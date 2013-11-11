@@ -1,0 +1,3 @@
+<apex:page standardController="Lead" extensions="LeadRedirectController" action="{!gotoTotalCheckPage}">
+<!--  Use to overrides New Lead button. Redirect to TotalCheck page -->
+</apex:page>

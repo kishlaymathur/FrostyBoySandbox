@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AccountSharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <criteriaBasedRules>
+        <fullName>Distributor_account_access_to_everyone</fullName>
+        <sharedTo>
+            <roleAndSubordinatesInternal>CEO</roleAndSubordinatesInternal>
+        </sharedTo>
+        <criteriaItems>
+            <field>Type</field>
+            <operation>equals</operation>
+            <value>Distributor</value>
+        </criteriaItems>
+        <accountAccessLevel>Edit</accountAccessLevel>
+        <caseAccessLevel>None</caseAccessLevel>
+        <contactAccessLevel>Edit</contactAccessLevel>
+        <name>Distributor account access to everyone</name>
+        <opportunityAccessLevel>None</opportunityAccessLevel>
+    </criteriaBasedRules>
+    <criteriaBasedRules>
+        <fullName>Share_Records_with_Frosty_Boy_Central_Sydney</fullName>
+        <sharedTo>
+            <portalRoleAndSubordinates>FrostyBoyCentralSydneyPartnerUser</portalRoleAndSubordinates>
+        </sharedTo>
+        <criteriaItems>
+            <field>ParentAccountId__c</field>
+            <operation>equals</operation>
+            <value>0019000000HU585</value>
+        </criteriaItems>
+        <accountAccessLevel>Edit</accountAccessLevel>
+        <caseAccessLevel>Read</caseAccessLevel>
+        <contactAccessLevel>Edit</contactAccessLevel>
+        <name>Share Records with Frosty Boy Central Sydney</name>
+        <opportunityAccessLevel>Edit</opportunityAccessLevel>
+    </criteriaBasedRules>
+    <ownerRules>
+        <fullName>Key_Account_Role</fullName>
+        <sharedTo>
+            <role>Key_Account_Manager_Australia</role>
+        </sharedTo>
+        <sharedFrom>
+            <role>CEO</role>
+        </sharedFrom>
+        <accountAccessLevel>Edit</accountAccessLevel>
+        <caseAccessLevel>None</caseAccessLevel>
+        <contactAccessLevel>Edit</contactAccessLevel>
+        <name>Key Account Role</name>
+        <opportunityAccessLevel>None</opportunityAccessLevel>
+    </ownerRules>
+    <ownerRules>
+        <fullName>Reception</fullName>
+        <sharedTo>
+            <role>Reception</role>
+        </sharedTo>
+        <sharedFrom>
+            <roleAndSubordinatesInternal>CEO</roleAndSubordinatesInternal>
+        </sharedFrom>
+        <accountAccessLevel>Edit</accountAccessLevel>
+        <caseAccessLevel>None</caseAccessLevel>
+        <contactAccessLevel>Edit</contactAccessLevel>
+        <name>Reception</name>
+        <opportunityAccessLevel>Read</opportunityAccessLevel>
+    </ownerRules>
+    <ownerRules>
+        <fullName>Share_Partner_records_with_Internal_users</fullName>
+        <sharedTo>
+            <group>PARTNER_PORTAL_ACCOUNTS_GROUP</group>
+        </sharedTo>
+        <sharedFrom>
+            <portalRoleAndSubordinates>FrostyBoyCentralSydneyPartnerUser</portalRoleAndSubordinates>
+        </sharedFrom>
+        <accountAccessLevel>Edit</accountAccessLevel>
+        <caseAccessLevel>Read</caseAccessLevel>
+        <contactAccessLevel>Edit</contactAccessLevel>
+        <name>Share Partner records with Internal users</name>
+        <opportunityAccessLevel>Read</opportunityAccessLevel>
+    </ownerRules>
+</AccountSharingRules>

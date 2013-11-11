@@ -1,0 +1,9 @@
+<apex:page sidebar="false" showHeader="false" standardController="Campaign" extensions="FB_CreateFilterCriteriaController">
+  <apex:form id="form1">
+            <apex:pageBlock >
+                <apex:repeat value="{!PickValues}" var="pw">
+                    <apex:outputText >{!pw.pickvals}</apex:outputText>
+                </apex:repeat>
+            </apex:pageBlock>
+        </apex:form>
+</apex:page>

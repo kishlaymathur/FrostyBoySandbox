@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This object contain the details of machines and spare parts and serve as the master table for all equipment that have been purchased by  Frosty Boy.</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Commissioned__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Commissioned</label>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Current_Machine_Location__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Current Machine Location</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Machines</relationshipLabel>
+        <relationshipName>Machines</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Date_Purchased__c</fullName>
+        <externalId>false</externalId>
+        <label>Date Purchased</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Item__c</fullName>
+        <externalId>false</externalId>
+        <label>Item</label>
+        <length>50</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Last_Service_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Last Service Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Location_Count__c</fullName>
+        <externalId>false</externalId>
+        <label>Location Count</label>
+        <summarizedField>Machine_Inventory__c.Machine_Status_Indicator__c</summarizedField>
+        <summaryForeignKey>Machine_Inventory__c.Machine_Number__c</summaryForeignKey>
+        <summaryOperation>max</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Machine_Decals__c</fullName>
+        <externalId>false</externalId>
+        <label>Machine Decals</label>
+        <picklist>
+            <controllingField>Model_Type__c</controllingField>
+            <picklistValues>
+                <fullName>Generic</fullName>
+                <controllingFieldValues>Smach 1500</controllingFieldValues>
+                <controllingFieldValues>Smach 1500P</controllingFieldValues>
+                <controllingFieldValues>Smach 2500P</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Frosty Boy Wave</fullName>
+                <controllingFieldValues>Smach 1500</controllingFieldValues>
+                <controllingFieldValues>Smach 1500P</controllingFieldValues>
+                <controllingFieldValues>Smach 2500P</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Frosty Boy Bubbles</fullName>
+                <controllingFieldValues>Smach 1500</controllingFieldValues>
+                <controllingFieldValues>Smach 1500P</controllingFieldValues>
+                <controllingFieldValues>Smach 2500P</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Frozen Yoghurt</fullName>
+                <controllingFieldValues>Smach 1500</controllingFieldValues>
+                <controllingFieldValues>Smach 1500P</controllingFieldValues>
+                <controllingFieldValues>Smach 2500P</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Custom Made</fullName>
+                <controllingFieldValues>Smach 1500</controllingFieldValues>
+                <controllingFieldValues>Smach 1500P</controllingFieldValues>
+                <controllingFieldValues>Smach 2500P</controllingFieldValues>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Machine_Status__c</fullName>
+        <externalId>false</externalId>
+        <formula>Case( Location_Count__c,0, &apos;Ready&apos;, 
+1,&apos;Already In Use&apos;,
+2,&apos;Sitting in distributor warehouse ready to be placed&apos;,
+3, &apos;Waiting to be fixed&apos;,
+4, &apos;Contract Completed&apos;,
+&apos;&apos; )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Machine Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Minimum_Stock__c</fullName>
+        <defaultValue>30</defaultValue>
+        <externalId>false</externalId>
+        <label>Minimum Stock</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Model_Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Model Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Smach 1500</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Smach 1500P</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Smach 2500P</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Taylor 152</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Taylor 161</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Taylor 430</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Taylor C723</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Classic 1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Monthly_Payment_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Monthly Payment Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Preventing_M__c</fullName>
+        <defaultValue>150</defaultValue>
+        <externalId>false</externalId>
+        <label>Preventive Maintenance Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Spare_Parts_Remaining__c</fullName>
+        <externalId>false</externalId>
+        <formula>Total_Quantity__c - Spare_Parts_Used1__c</formula>
+        <label>Spare Parts Remaining</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Spare_Parts_Used1__c</fullName>
+        <externalId>false</externalId>
+        <label>Spare Parts Used</label>
+        <summarizedField>Purchase__c.Spare_Part_Used__c</summarizedField>
+        <summaryForeignKey>Purchase__c.Machine__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Total_Quantity__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Quantity</label>
+        <summarizedField>Purchase__c.Quantity__c</summarizedField>
+        <summaryForeignKey>Purchase__c.Machine__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Unit_Cost__c</fullName>
+        <externalId>false</externalId>
+        <label>Unit Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Machine</label>
+    <listViews>
+        <fullName>Active_Machines</fullName>
+        <columns>NAME</columns>
+        <columns>Model_Type__c</columns>
+        <columns>Machine_Decals__c</columns>
+        <columns>Machine_Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Machine_Status__c</field>
+            <operation>equals</operation>
+            <value>Already In Use</value>
+        </filters>
+        <label>Active Machines</label>
+    </listViews>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Model_Type__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Repair_Machines</fullName>
+        <columns>NAME</columns>
+        <columns>Model_Type__c</columns>
+        <columns>Machine_Decals__c</columns>
+        <columns>Machine_Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Machine_Status__c</field>
+            <operation>equals</operation>
+            <value>Waiting to be fixed</value>
+        </filters>
+        <label>Repair Machines</label>
+    </listViews>
+    <nameField>
+        <label>Serial Number</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <namedFilters>
+        <fullName>Contract_00NO0000000oxSgMAI</fullName>
+        <active>true</active>
+        <field>Contract.Machine_Serial_Number__c</field>
+        <filterItems>
+            <field>$Source.Machine_Model_Type__c</field>
+            <operation>equals</operation>
+            <valueField>Machine__c.Model_Type__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>$Source.Machine_Decals__c</field>
+            <operation>equals</operation>
+            <valueField>Machine__c.Machine_Decals__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Machine__c.Machine_Status__c</field>
+            <operation>notEqual</operation>
+            <value>Already In Use</value>
+        </filterItems>
+        <filterItems>
+            <field>Machine__c.Commissioned__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+        <name>Contract_Machine Serial Number</name>
+        <sourceObject>Contract</sourceObject>
+    </namedFilters>
+    <namedFilters>
+        <fullName>nf_01IO00000000h6WMAQ_00NO0000000nvblMAA</fullName>
+        <active>true</active>
+        <field>Machine_Inventory__c.Machine_Number__c</field>
+        <filterItems>
+            <field>Machine__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Machine</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+        <name>Machine Location_Machine Number</name>
+    </namedFilters>
+    <namedFilters>
+        <fullName>nf_01IO00000000hXwMAI_00NO0000000o2e7MAA</fullName>
+        <active>true</active>
+        <field>Spare_Parts_Used__c.Spare_Part__c</field>
+        <filterItems>
+            <field>Machine__c.RecordType.Name</field>
+            <operation>equals</operation>
+            <value>Spare Part</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+        <name>Spare Parts Used_Spare Part</name>
+    </namedFilters>
+    <pluralLabel>Machines</pluralLabel>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <recordTypes>
+        <fullName>Machine</fullName>
+        <active>true</active>
+        <description>This Record type will create Machine</description>
+        <label>Machine</label>
+        <picklistValues>
+            <picklist>Machine_Decals__c</picklist>
+            <values>
+                <fullName>Custom Made</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Frosty Boy Bubbles</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Frosty Boy Wave</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Frozen Yoghurt</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Generic</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Model_Type__c</picklist>
+            <values>
+                <fullName>Classic 1</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Smach 1500</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Smach 1500P</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Smach 2500P</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Taylor 152</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Taylor 161</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Taylor 430</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Taylor C723</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Spare_Part</fullName>
+        <active>true</active>
+        <description>This Record type will create Spare part</description>
+        <label>Spare Part</label>
+        <picklistValues>
+            <picklist>Machine_Decals__c</picklist>
+            <values>
+                <fullName>Custom Made</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Frosty Boy Bubbles</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Frosty Boy Wave</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Frozen Yoghurt</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Generic</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Model_Type__c</picklist>
+            <values>
+                <fullName>Classic 1</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Smach 1500</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Smach 1500P</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Smach 2500P</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Taylor 152</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Taylor 161</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Taylor 430</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Taylor C723</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <customTabListAdditionalFields>Model_Type__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Machine_Decals__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Machine_Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Last_Service_Date__c</customTabListAdditionalFields>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <lookupDialogsAdditionalFields>Model_Type__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Total_Quantity__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Machine_Decals__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Machine_Status__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Last_Service_Date__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Model_Type__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Machine_Decals__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Machine_Status__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Last_Service_Date__c</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Model_Type__c</searchFilterFields>
+        <searchFilterFields>Machine_Decals__c</searchFilterFields>
+        <searchFilterFields>Machine_Status__c</searchFilterFields>
+        <searchFilterFields>Commissioned__c</searchFilterFields>
+        <searchFilterFields>Last_Service_Date__c</searchFilterFields>
+        <searchResultsAdditionalFields>Model_Type__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Machine_Decals__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Machine_Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Last_Service_Date__c</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

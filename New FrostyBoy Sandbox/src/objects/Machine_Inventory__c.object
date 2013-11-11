@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This object tracks the location where a machine is kept by a distributor/Frosty Boy. All cases are raised against this record as customer location is tracked here.</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Active__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Active</label>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Actual_Rent_from_Payments__c</fullName>
+        <externalId>false</externalId>
+        <label>Actual Rent from Payments</label>
+        <summarizedField>Monthly_Payment__c.Actual_Rent__c</summarizedField>
+        <summaryForeignKey>Monthly_Payment__c.Machine_Location__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Billing_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Billing Start Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Contract_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>Contract__r.EndDate</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Contract End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Contract_Start_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>Contract__r.StartDate</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Contract Start Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Contract__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Contract</label>
+        <referenceTo>Contract</referenceTo>
+        <relationshipLabel>Machine Locations</relationshipLabel>
+        <relationshipName>Machine_Locations</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Cool_Off_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Cool Off End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Cool_Off_Start_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Cool Off Start Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Cost_Till_date__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Cost Till date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Customer__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Customer</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Machine Locations (Customer)</relationshipLabel>
+        <relationshipName>Machine_Inventory</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>DistributorId__c</fullName>
+        <externalId>false</externalId>
+        <formula>Customer__r.Parent.Id</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>DistributorId</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Distributor__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Distributor</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipName>Machine_Inventory1</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>End_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Expected_Rent_From_Payments__c</fullName>
+        <externalId>false</externalId>
+        <label>Expected Rent From Payments</label>
+        <summarizedField>Monthly_Payment__c.Expected_Rent__c</summarizedField>
+        <summaryForeignKey>Monthly_Payment__c.Machine_Location__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Formula_Distributor__c</fullName>
+        <externalId>false</externalId>
+        <formula>HYPERLINK( &apos;/&apos;+Customer__r.Parent.Id , Customer__r.Parent.Name)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Distributor</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Installation_Date__c</fullName>
+        <defaultValue>today()</defaultValue>
+        <externalId>false</externalId>
+        <label>Installation Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Machine_Location1__c</fullName>
+        <externalId>false</externalId>
+        <formula>Customer__r.Name +&apos; &apos;+  Machine_Number__r.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Machine Location</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Machine_Location_Address__c</fullName>
+        <externalId>false</externalId>
+        <formula>Customer__r.BillingStreet +&apos;, &apos;+ Customer__r.BillingCity+&apos;, &apos;+Customer__r.BillingCountry+&apos;, &apos;+  Customer__r.BillingState +&apos;, &apos;+ Customer__r.BillingPostalCode</formula>
+        <label>Machine Location Address</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Machine_Number__c</fullName>
+        <externalId>false</externalId>
+        <label>Machine Number</label>
+        <referenceTo>Machine__c</referenceTo>
+        <relationshipLabel>Machine Locations</relationshipLabel>
+        <relationshipName>Machine_Inventory</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Machine_Status_Indicator__c</fullName>
+        <description>This field value indicates
+Inactive = 0
+Active = 1
+Cool-off = 2
+Repair = 3</description>
+        <externalId>false</externalId>
+        <label>Machine Status Indicator</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>MonthlyPaymentFormula__c</fullName>
+        <externalId>false</externalId>
+        <formula>Machine_Number__r.Monthly_Payment_Amount__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>MonthlyPayment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Revenue_Till_Date__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Revenue Till Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Sale_price__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Monthly Installment Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Repair</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Ready</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Allocated</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Allocated-Cool Off</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Contract Completed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Total_Revenue_Till_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>Revenue_Till_Date__c  +  Actual_Rent_from_Payments__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Revenue Till Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Rent</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sale</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>FOL</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <label>Machine Location</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Customer__c</columns>
+        <columns>Formula_Distributor__c</columns>
+        <columns>Installation_Date__c</columns>
+        <columns>End_Date__c</columns>
+        <columns>Machine_Number__c</columns>
+        <columns>Sale_price__c</columns>
+        <columns>Status__c</columns>
+        <columns>Type__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Cool_Off</fullName>
+        <columns>NAME</columns>
+        <columns>Customer__c</columns>
+        <columns>Machine_Number__c</columns>
+        <columns>Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Cool-off</value>
+        </filters>
+        <label>Cool Off</label>
+    </listViews>
+    <listViews>
+        <fullName>Inactive</fullName>
+        <columns>NAME</columns>
+        <columns>Customer__c</columns>
+        <columns>Billing_Date__c</columns>
+        <columns>Machine_Number__c</columns>
+        <columns>Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Inactive</value>
+        </filters>
+        <label>Inactive</label>
+    </listViews>
+    <listViews>
+        <fullName>Repair</fullName>
+        <columns>NAME</columns>
+        <columns>Customer__c</columns>
+        <columns>Machine_Number__c</columns>
+        <columns>Installation_Date__c</columns>
+        <columns>Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Repair</value>
+        </filters>
+        <label>Repair</label>
+    </listViews>
+    <nameField>
+        <displayFormat>MCL-{0000000000}</displayFormat>
+        <label>Machine Locations</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Machine Locations</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Machine_Number__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Customer__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Installation_Date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Sale_price__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>End_Date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Cost_Till_date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Revenue_Till_Date__c</customTabListAdditionalFields>
+        <listViewButtons>Generate_Payments</listViewButtons>
+        <listViewButtons>Create_Service_Case</listViewButtons>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>CoolOffStartAndEndDatesMandotary</fullName>
+        <active>true</active>
+        <description>If the status is Cool of in machine location then cool off start date and cool off end date should be filled</description>
+        <errorConditionFormula>And(ISPICKVAL( Status__c, &apos;Cool-off&apos;),Or(  ISNULL(Cool_Off_Start_Date__c )  , ISNULL( Cool_Off_End_Date__c ) ))</errorConditionFormula>
+        <errorMessage>Enter Cool Off Details</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Create_Service_Case</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Create Service Case</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)} 
+var result= sforce.apex.execute(&quot;FB_CallServiceCaseCreator&quot;, &quot;ExecuteServiceRequestCreator&quot;, {}); 
+if(result==&apos;success&apos;){ 
+window.alert(&apos;Service Cases Creation in Progress.It may take around 5 minutes.&apos;); 
+} 
+else{ 
+window.alert(&apos;Error in Creating Service Cases , Please Try Again&apos;); 
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Generate_Payments</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Generate Payments</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)}
+
+
+
+var selectedRecordids = {!GETRECORDIDS($ObjectType.Machine_Inventory__c)};
+if (selectedRecordids [0] == null) {
+alert(&quot;Please select at least one record&quot;); 
+}
+
+var result= sforce.apex.execute(&quot;FB_ClassGenerateMonthlyPayments&quot;, &quot;ExecuteGenerateMonthlyPayment&quot;, {&apos;listOflocations&apos;:selectedRecordids,&apos;status&apos;:&apos;Allocated&apos;});
+if(result==&apos;success&apos;){
+window.alert(&apos;Monthly Payments Generated Successfully&apos;);
+}
+else{
+window.alert(&apos;Error in generating Monthly Payments , Please Try Again&apos;);
+}</url>
+    </webLinks>
+</CustomObject>

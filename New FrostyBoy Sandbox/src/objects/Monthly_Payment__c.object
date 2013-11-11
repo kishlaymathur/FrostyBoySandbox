@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This object tracks the monthly payments expected from a machine location (only if Rent/FOL). If a machine is at a location and is active , a new record is created at the start of the month using a batch class. it populates the expected revenue from that machine this month and possibly creates a task against the owner to follow up on the invoice at the end of the month.</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Actual_Rent__c</fullName>
+        <externalId>false</externalId>
+        <label>Actual Rent</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Expected_Rent__c</fullName>
+        <externalId>false</externalId>
+        <label>Expected Rent</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Machine_Location__c</fullName>
+        <externalId>false</externalId>
+        <label>Machine Location</label>
+        <referenceTo>Machine_Inventory__c</referenceTo>
+        <relationshipLabel>Monthly Payments</relationshipLabel>
+        <relationshipName>Monthly_Payments</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Month__c</fullName>
+        <externalId>false</externalId>
+        <label>Month</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Paid</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Unpaid</fullName>
+                <default>true</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Reason__c</fullName>
+        <externalId>false</externalId>
+        <label>Reason</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>TextArea</type>
+    </fields>
+    <label>Monthly Payment</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Machine_Location__c</columns>
+        <columns>Actual_Rent__c</columns>
+        <columns>Expected_Rent__c</columns>
+        <columns>Month__c</columns>
+        <columns>Reason__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Monthly Payment Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Monthly Payments</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Machine_Location__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Expected_Rent__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Actual_Rent__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Month__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Reason__c</customTabListAdditionalFields>
+        <listViewButtons>Set_Actual_Rent</listViewButtons>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>ValidateReasonMandotary</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(Actual_Rent__c &lt; Expected_Rent__c, ISBLANK(Reason__c) )</errorConditionFormula>
+        <errorMessage>Please enter the reason why Actual Rent is less than Expected Rent</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Set_Actual_Rent</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Set Actual Rent</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/20.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/20.0/apex.js&quot;)}
+
+var selectedRecordIds = {!GETRECORDIDS($ObjectType.Monthly_Payment__c)};
+var result= sforce.apex.execute(&quot;FB_SetAcutalRentAsMonthlyRent&quot;, &quot;setActualRent&quot;, {&apos;recordIds&apos;:selectedRecordIds });
+if(result==&apos;success&apos;){
+window.alert(&apos;Actual Rent Successfully Set&apos;);
+}
+else{
+window.alert(&apos;Error in Setting Actual Rent, Please Try Again&apos;);
+}
+window.location.reload();</url>
+    </webLinks>
+</CustomObject>

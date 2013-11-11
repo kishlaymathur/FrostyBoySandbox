@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Monthly Payment</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Monthly Payments</value>
+    </caseValues>
+    <fields>
+        <label><!-- Actual Rent --></label>
+        <name>Actual_Rent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Expected Rent --></label>
+        <name>Expected_Rent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Machine Location --></label>
+        <name>Machine_Location__c</name>
+        <relationshipLabel><!-- Monthly Payments --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Month --></label>
+        <name>Month__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Status --></label>
+        <name>Payment_Status__c</name>
+        <picklistValues>
+            <masterLabel>Paid</masterLabel>
+            <translation><!-- Paid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unpaid</masterLabel>
+            <translation><!-- Unpaid --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Reason --></label>
+        <name>Reason__c</name>
+    </fields>
+    <layouts>
+        <layout>Monthly Payment Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Please enter the reason why Actual Rent is less than Expected Rent --></errorMessage>
+        <name>ValidateReasonMandotary</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Set_Actual_Rent --></label>
+        <name>Set_Actual_Rent</name>
+    </webLinks>
+</CustomObjectTranslation>

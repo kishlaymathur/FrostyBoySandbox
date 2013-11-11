@@ -1,0 +1,803 @@
+<apex:page standardController="Contact"
+    extensions="TotalCheckController" sidebar="false" id="thePage"
+    cache="false" action="{!pageAction}">
+
+    <head>
+
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.TCAutoSuggest, 'autocomplete.js')}"></script>
+
+    <apex:stylesheet value="{!URLFOR($Resource.TCAutoSuggest, 'autocomplete.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.jQueryUI, '/core/jquery-1.4.3.min.js')}" />
+
+    <style>
+.cField {
+    width: 300px;
+}
+</style>
+
+    <script type="text/javascript">
+    
+        document.onclick=function(e){
+            $('.suggestions').children().attr("style", "display:none");
+        }
+        
+        var ttlchk_current_field = '';
+        var ttlchk_current_suggest_div = '';
+        //This is a small workaround for getting the component to work with the enter key
+        function noenter(e){
+ 
+             var key;    
+             if(window.event)
+                  key = window.event.keyCode; //IE
+             else
+                  key = e.which; //firefox    
+             return (key != 13);    
+
+        }
+        
+        function setFocusAndValue(element, value) {
+            element = (typeof element == 'string')?document.getElementById(element):element;
+            if(element) {
+                element.value = value;
+                // focus() not properly supported in some browsers due blur events preceding it 
+                setTimeout(function(){element.focus();}, 100);
+            }
+        }
+        
+        function fireAddressSearch(field, addressFieldId, addressSuggestId, tempField, addressSearchFn, addressCallback) {
+            var address = document.getElementById(addressFieldId);
+            var addressSuggest = document.getElementById(addressSuggestId);
+            if(field.value == '' || field.value == null || (typeof field.isValid != 'undefined' && field.isValid == false)) //ignore if isValid is not set
+                return;
+                
+            setFocusAndValue(address, '');
+            new AutoComplete(addressFieldId, addressSuggestId, tempField, addressSearchFn, addressCallback, true);
+        }
+        
+        function replaceAll(txt, replace, with_this) 
+        {
+            return txt.replace(new RegExp(replace, 'g'),with_this);
+        }
+        
+        function updateAddressFields() {
+            var isEdit = '{!isEdit}';
+            var hasDetailList = document.getElementById('{!$Component.mainForm.hasDetailListHd}').value;
+            for(var key in ttlchk_json_field_values) {
+                    var field = document.getElementById(key);
+                    var value = ttlchk_json_field_values[key];
+                    var existingValue = field.value;
+                    if(existingValue != null)
+                    {
+                        existingValue = replaceAll(existingValue,'-',' ');
+                        existingValue = replaceAll(existingValue,'[()]','');
+                    }
+                    if(value != null)
+                    {
+                        value = replaceAll(value,'-',' ');
+                        value = replaceAll(value,'[()]','');
+                    }                    
+                    if((key == 'thePage:mainForm:thePageBlockId:mainFormSection:mainFormSection2:phoneItem:phoneNumber' || key == 'thePage:mainForm:thePageBlockId:mainFormSection:mainFormSection2:mobileItem:mobilePhone')&& existingValue != '' && existingValue != value && isEdit == 'true')
+                    {
+                        var status = confirm('Do you want to replace existing phoneNumber?');
+                        if(status == true)
+                            field.value = value;
+                    }
+                    else
+                        field.value = value;
+                }
+            if(hasDetailList === true || hasDetailList == 'true') {
+                // handle events for detail list
+                new AutoComplete(ttlchk_current_field, ttlchk_current_suggest_div.id + '_dl', '{!$Component.mainForm.hiddenInputFld}', function(){return;}, selectAddressDetailfn);
+                updateSuggestions(ttlchk_current_field.id, ttlchk_current_suggest_div.id + '_dl', ttlchk_json_address_detail_results, false);
+                document.getElementById('{!$Component.mainForm.hasDetailListHd}').value = false;
+                }
+            else {
+            }
+        }
+        
+        function updateSuggestions(searchField, suggestionDiv, resultsObj, hasNoNames) {
+            var isArray = (typeof resultsObj.length != 'undefined'); // unlikely that object has attribute 'length' 
+            searchField = (typeof searchField == 'string')?document.getElementById(searchField):searchField;
+            suggestionDiv = (typeof suggestionDiv == 'string')?document.getElementById(suggestionDiv):suggestionDiv;
+                            
+            if((typeof searchField.isSearchCancelled != 'undefined') && searchField.isSearchCancelled == true)
+                return;
+            
+            ttlchk_current_field = searchField;
+            ttlchk_current_suggest_div = suggestionDiv;
+            
+            var strid = suggestionDiv.id;
+            var suggestions = suggestionDiv.children[0]; // <div><div></div></div>
+            suggestions.innerHTML = '';
+            
+            for(var key in resultsObj) {
+                var myElement = document.createElement('div');
+                var value = resultsObj[key];
+                if(hasNoNames)
+                    myElement.id = strid + 'N_R';
+                
+                var textNode = document.createTextNode(isArray?value:key);
+                    
+                myElement.appendChild(textNode);
+                if(!isArray && value) {
+                    myElement.className = 'wp';
+                }
+                suggestions.appendChild(myElement);
+            }
+            var count;
+            if(!isArray) {
+                for (var k in resultsObj) {
+                    if (resultsObj.hasOwnProperty(k)) {
+                       ++count;
+                    }
+                }
+            }
+            else {
+                count = resultsObj.length;
+                }
+            if(count > 0)
+                suggestionDiv.style.display = 'block';
+        }
+        
+        function initAutoComplete(isValidate,isValidate1) {
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.streetItem.address}','{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.streetItem.addressSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfn, selectAddressesfn);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.suburbItem.suburb}','{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.suburbItem.suburbSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnSuburb, selectAddressesfn);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.stateItem.state}','{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.stateItem.stateSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnState, selectAddressesfn);
+            // Display search results under postcode field - least obstructive
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.postcodeItem.postcode}','{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.postcodeItem.postcodeSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnPostcode, selectAddressesfn, isValidate);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.mainFormSection.mainFormSection2.phoneItem.phoneNumber}','{!$Component.mainForm.thePageBlockId.mainFormSection.mainFormSection2.phoneItem.phoneNumberSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnPhone, selectAddressesfn,false,true);
+            //new AutoComplete('{!$Component.mainForm.thePageBlockId.mainFormSection.mainFormSection2.mobileItem.mobilePhone}','{!$Component.mainForm.thePageBlockId.mainFormSection.mainFormSection2.mobileItem.mobilephoneNumberSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnPhone1, selectAddressesfn);
+            
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.streetItem1.address1}','{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.streetItem1.addressSuggestWrap1}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfn1, selectAddressesfn1);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.suburbItem1.suburb1}','{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.suburbItem1.suburbSuggestWrap1}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnSuburb1, selectAddressesfn1);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.stateItem1.state1}','{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.stateItem1.stateSuggestWrap1}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnState1, selectAddressesfn1);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.postcodeItem1.postcode1}','{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.postcodeItem1.postcodeSuggestWrap1}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnPostcode1, selectAddressesfn1, isValidate1);
+            
+        }
+        
+        function resetFields() {
+            for(var key in ttlchk_json_field_values) {
+                var field = document.getElementById(key);
+                ttlchk_json_field_values[key] = '';
+                field.value = '';
+            }
+            
+            initAutoComplete();
+        }
+        
+        
+        function disableautocomplete() {
+          var forms = document.getElementsByTagName('form');
+          
+          for (var i = 0; i < forms.length; ++i) {
+            if (forms[i].setAttribute) {
+              forms[i].setAttribute('autocomplete', 'off')
+            } else {
+              forms[i].autocomplete = 'off'
+            }
+          }
+        }
+        
+        //Initialize onload
+        var oldonload = window.onload;
+        // initialize autocomplete fields and disable browser auto suggest on form fields
+        var newonload = function(){
+                            disableautocomplete(); 
+                            if({!isValidate}) { // Focus on postcode field before initializing search else search might cancel
+                                document.getElementById('{!$Component.mainForm.thePageBlockId.addressSection.addressSection1.postcodeItem.postcode}').focus();
+                            }
+                            if({!isValidate1}) { // Focus on postcode field before initializing search else search might cancel
+                                document.getElementById('{!$Component.mainForm.thePageBlockId.addressSection.addressSection2.postcodeItem1.postcode1}').focus();
+                            }
+                            initAutoComplete({!isValidate},{!isValidate1}); 
+                            };
+        if (typeof window.onload != 'function') {
+          window.onload = newonload;
+        } 
+        else {
+          window.onload = function() {
+            oldonload();
+            newonload();
+          }
+        }
+</script>
+
+    </head>
+
+    <body>
+
+    <apex:form id="mainForm">
+        <apex:image value="{!URLFOR($Resource.TCAutoSuggest, 'Powered_By_TC_Logo.jpg')}"
+            width="150" height="50" />
+        <apex:sectionHeader help="https://help.salesforce.com/apex/htviewhelpdoc?id=contacts_edit.htm&language=en"
+            subtitle="{!Contact.Name}" title="Contact Edit" />
+
+        <!-- Hidden Fields -->
+        <apex:inputHidden value="{!inputHiddenValue}" id="hiddenInputFld" />
+        <apex:inputHidden value="{!hasDetailList}" id="hasDetailListHd" />
+
+        <!-- Action Functions -->
+        <apex:actionFunction action="{!searchNames}" name="searchNamesfn"
+            reRender="ttlchkJsonSearchResults,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.mainFormSection1.formFields.pName}', '{!$Component.thePageBlockId.mainFormSection.mainFormSection1.formFields.primaryNameSuggestWrap}', ttlchk_json_name_search_results, !ttlchk_json_name_has_results);" />
+
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfn"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.addressSection.addressSection1.streetItem.address}', '{!$Component.thePageBlockId.addressSection.addressSection1.streetItem.addressSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="1" name="addrNo" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfn1"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.addressSection.addressSection2.streetItem1.address1}', '{!$Component.thePageBlockId.addressSection.addressSection2.streetItem1.addressSuggestWrap1}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="2" name="addrNo" />
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfnSuburb"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.addressSection.addressSection1.suburbItem.suburb}', '{!$Component.thePageBlockId.addressSection.addressSection1.suburbItem.suburbSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="1" name="addrNo" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfnSuburb1"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.addressSection.addressSection2.suburbItem1.suburb1}', '{!$Component.thePageBlockId.addressSection.addressSection2.suburbItem1.suburbSuggestWrap1}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="2" name="addrNo" />
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfnState"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.addressSection.addressSection1.stateItem.state}', '{!$Component.thePageBlockId.addressSection.addressSection1.stateItem.stateSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="1" name="addrNo" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfnState1"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.addressSection.addressSection2.stateItem1.state1}', '{!$Component.thePageBlockId.addressSection.addressSection2.stateItem1.stateSuggestWrap1}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="2" name="addrNo" />
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfnPostcode"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.addressSection.addressSection1.postcodeItem.postcode}', '{!$Component.thePageBlockId.addressSection.addressSection1.postcodeItem.postcodeSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="1" name="addrNo" />
+        </apex:actionFunction>
+        
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfnPostcode1"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.addressSection.addressSection2.postcodeItem1.postcode1}', '{!$Component.thePageBlockId.addressSection.addressSection2.postcodeItem1.postcodeSuggestWrap1}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="2" name="addrNo" />
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfnPhone"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.mainFormSection2.phoneItem.phoneNumber}', '{!$Component.thePageBlockId.mainFormSection.mainFormSection2.phoneItem.phoneNumberSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="1" name="addrNo" />
+            <apex:param value="1" name="phone" />
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!searchAddresses}"
+            name="searchAddressesfnPhone1"
+            reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages"
+            oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.mainFormSection2.mobileItem.mobilePhone}', '{!$Component.thePageBlockId.mainFormSection.mainFormSection2.mobileItem.mobilephoneNumberSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+            <apex:param value="1" name="addrNo" />
+        </apex:actionFunction>
+
+        <apex:actionFunction action="{!selectAddress}"
+            name="selectAddressesfn"
+            reRender="ttlchkJsonFieldValues,ttlchkJsonSearchResults,hasDetailListHd,recordCount,errorMessages"
+            oncomplete="updateAddressFields();" status="Status1" />
+            
+        <apex:actionFunction action="{!selectAddress}"
+            name="selectAddressesfn1"
+            reRender="ttlchkJsonFieldValues,ttlchkJsonSearchResults,hasDetailListHd,recordCount,errorMessages"
+            oncomplete="updateAddressFields();" status="Status1" />
+
+        <apex:actionFunction action="{!selectAddressDetail}"
+            name="selectAddressDetailfn"
+            reRender="ttlchkJsonFieldValues,errorMessages" status="Status1"
+            oncomplete="updateAddressFields();initAutoComplete();" />
+            
+        <apex:actionFunction action="{!selectAddressDetail}"
+            name="selectAddressDetailfn1"
+            reRender="ttlchkJsonFieldValues,errorMessages" status="Status1"
+            oncomplete="updateAddressFields();initAutoComplete();" />
+
+        <!-- Page Messages -->
+        <apex:pageMessages />
+
+        <apex:outputPanel id="errorMessages">
+            <apex:outputText value="{!errorMessage}" rendered="{!hasError}"
+                style="font-style:normal;font-weight: bold;color:red;" />
+        </apex:outputPanel>
+        
+        <!-- Page Content -->
+        <apex:pageBlock id="thePageBlockId" tabStyle="Contact"
+            title="Contact Edit">
+
+            <!--  Usage Count
+            <apex:pageBlockSection id="recordCount" rendered="{!showUsageCount}">
+                <apex:outputText >No. of records retrieved so far : {!usageCount}</apex:outputText>
+            </apex:pageBlockSection>-->
+
+
+            <!-- Error Messages
+            <apex:pageBlockSectionItem >
+                    <apex:outputPanel id="errorMessages">
+                        <apex:outputText value="{!errorMessage}" rendered="{!hasError}" style="font-style:normal;font-weight: bold;color:red;"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            -->
+
+            <apex:pageBlockSection columns="2" id="mainFormSection"
+                title="Contact Information" collapsible="true">
+
+                <apex:pageBlockSection columns="1" id="mainFormSection1">
+
+                   <!-- <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Salutation" />
+                        <apex:inputField value="{!Contact.Salutation}" />
+                    </apex:pageBlockSectionItem> -->
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Contact Owner" />
+                       <apex:outputtext value="{!IF(AND(Contact.ownerId != null,Contact.ownerId != ''),Contact.owner.Name,$User.FirstName + ' ' + $User.LastName)}" /> 
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="First Name" />
+                        <apex:inputField value="{!Contact.firstname}" />
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="formFields">
+                        <apex:outputLabel value="Last Name" for="pName" />
+                        <apex:outputPanel styleClass="requiredInput" layout="block">
+                            <span class="requiredBlock"></span>
+                            <apex:inputText value="{!primaryName}" id="pName"
+                                onkeypress="return noenter(event)"
+                                onfocus="self_=this;new AutoComplete('{!$Component.pName}','{!$Component.primaryNameSuggestWrap}', '', searchNamesfn, function(){fireAddressSearch(self_, '{!$Component.addressSection.addressSection1.streetItem.address}', '{!$Component.addressSection.addressSection1.streetItem.addressSuggestWrap}', '{!$Component.hiddenInputFld}', searchAddressesfn, selectAddressesfn);});return false;"
+                                />
+                            <apex:outputPanel id="primaryNameSuggestWrap" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Account Name" />
+                        <apex:inputField value="{!Contact.AccountId}" />
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Title" />
+                        <apex:inputField value="{!Contact.Title}" />
+                    </apex:pageBlockSectionItem>                    
+
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection columns="1" id="mainFormSection2">
+
+                   <!-- <apex:pageBlockSectionItem rendered="{!isEdit}">
+                        <apex:outputLabel value="Contact Owner" />
+                        <apex:outputField value="{!Contact.OwnerId}" />
+                    </apex:pageBlockSectionItem> -->
+
+                    <apex:pageBlockSectionItem rendered="{!NOT(isEdit)}">
+
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="phoneItem">
+                        <apex:outputLabel value="Phone Number" for="phoneNumber" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!phoneNumber}" id="phoneNumber"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="phoneNumberSuggestWrap" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="phoneNumberSuggestWrap_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="mobileItem">
+                        <apex:outputLabel value="Mobile" for="mobilePhone" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!mobilePhoneNumber}" id="mobilePhone"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="mobilephoneNumberSuggestWrap"
+                                layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="mobilephoneNumberSuggestWrap_dl"
+                                layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Email" />
+                        <apex:inputField value="{!Contact.Email}" />
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Reports To" />
+                        <apex:inputField value="{!Contact.ReportsToId}" />
+                    </apex:pageBlockSectionItem>
+
+                   <!-- <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Email Opt Out" />
+                        <apex:inputField value="{!Contact.HasOptedOutOfEmail}" />
+                    </apex:pageBlockSectionItem> -->
+
+
+                </apex:pageBlockSection>
+
+
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="addressSection" collapsible="true"
+                columns="2" title="  Address Information">
+
+                <apex:pageBlockSection columns="1" id="addressSection1">
+
+                    <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="streetItem">
+                        <apex:outputLabel value="Mailing Street" for="address" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!address}" id="address"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="addressSuggestWrap" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="addressSuggestWrap_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="suburbItem">
+                        <apex:outputLabel value="Mailing City" for="suburb" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!suburb}" id="suburb"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="suburbSuggestWrap" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="suburbSuggestWrap_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="stateItem">
+                        <apex:outputLabel value="Mailing State/Province" for="state" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!state}" id="state"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="stateSuggestWrap" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="stateSuggestWrap_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="postcodeItem">
+                        <apex:outputLabel value="Mailing Zip/Postal Code" for="postcode" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!postcode}" id="postcode"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="postcodeSuggestWrap" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="postcodeSuggestWrap_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="countryItem">
+                        <apex:outputLabel value="Mailing Country" for="mailingCountry" />
+                        <apex:inputText value="{!country}"
+                            id="MailingCountry" />
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+                        <apex:commandLink value="Copy Address" action="{!copyAddress}" oncomplete="initAutoComplete();"
+                            reRender="addressSection" status="Status1" />
+                    </apex:pageBlockSectionItem>
+
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection columns="1" id="addressSection2">
+
+                    <apex:pageBlockSectionItem >
+                        <apex:outputText value="" />
+                        <apex:actionStatus id="Status1">
+                            <apex:facet name="start">
+                                <img src="/img/loading.gif" align="left" />
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem id="streetItem1">
+                        <apex:outputLabel value="Other Street" for="address1" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!address1}" id="address1"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="addressSuggestWrap1" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="addressSuggestWrap1_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+<!--                    -->
+<!--                    <apex:pageBlockSectionItem >-->
+<!--                        <apex:outputLabel value="Other Street" for="address1" />-->
+<!--                        <apex:inputText value="{!Contact.OtherStreet}" id="address1" />-->
+<!--                    </apex:pageBlockSectionItem>-->
+
+                    <apex:pageBlockSectionItem id="suburbItem1">
+                        <apex:outputLabel value="Other City" for="suburb1" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!suburb1}" id="suburb1"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="suburbSuggestWrap1" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="suburbSuggestWrap1_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                    
+<!--                    <apex:pageBlockSectionItem >-->
+<!--                        <apex:outputLabel value="Other City" for="shippingCity" />-->
+<!--                        <apex:inputField value="{!Contact.OtherCity}" id="shippingCity" />-->
+<!--                    </apex:pageBlockSectionItem>-->
+
+                    <apex:pageBlockSectionItem id="stateItem1">
+                        <apex:outputLabel value="Other State/Province" for="state1" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!state1}" id="state1"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="stateSuggestWrap1" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="stateSuggestWrap1_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                    
+<!--                    <apex:pageBlockSectionItem >-->
+<!--                        <apex:outputLabel value="Other State/Province" for="shippingState" />-->
+<!--                        <apex:inputField value="{!Contact.OtherState}" id="shippingState" />-->
+<!--                    </apex:pageBlockSectionItem>-->
+
+                    <apex:pageBlockSectionItem id="postcodeItem1">
+                        <apex:outputLabel value="Other Zip/Postal Code" for="postcode1" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!postcode1}" id="postcode1"
+                                onkeypress="return noenter(event)" />
+                            <apex:outputPanel id="postcodeSuggestWrap1" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="postcodeSuggestWrap1_dl" layout="block"
+                                styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                    
+<!--                    <apex:pageBlockSectionItem >-->
+<!--                        <apex:outputLabel value="Other Zip/Postal Code"-->
+<!--                            for="shippingPostalCode" />-->
+<!--                        <apex:inputField value="{!Contact.OtherPostalCode}"-->
+<!--                            id="shippingPostalCode" />-->
+<!--                    </apex:pageBlockSectionItem>-->
+
+                    <apex:pageBlockSectionItem id="countryItem1">
+                        <apex:outputLabel value="Other Country" for="otherCountry" />
+                        <apex:inputText value="{!country1}" id="OtherCountry" />
+                    </apex:pageBlockSectionItem>
+
+
+                </apex:pageBlockSection>
+
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" id="addInformSection"
+                title="Additional Information" collapsible="true">
+
+                <apex:pageBlockSection columns="1" id="addInformSection1">
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Fax" />
+                        <apex:inputField value="{!Contact.Fax}" />
+                    </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="HomePhone" />
+                        <apex:inputField value="{!Contact.HomePhone}" />
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem id="otherPhoneItem">
+                        <apex:outputLabel value="Other Phone" for="otherPhone" />
+                        <apex:outputPanel >
+                            <apex:inputText value="{!otherPhoneNumber}" id="otherPhone" />
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Assistant" />
+                        <apex:inputField value="{!Contact.AssistantName}" />
+                    </apex:pageBlockSectionItem>   
+
+                 <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Asst. Phone" />
+                        <apex:inputField value="{!Contact.AssistantPhone}" />
+                    </apex:pageBlockSectionItem>     
+
+
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection columns="1" id="addInformSection2">
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Lead Source" />
+                        <apex:inputField value="{!Contact.LeadSource}" />
+                    </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Birthdate" />
+                        <apex:inputField value="{!Contact.Birthdate}" />
+                    </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Department" />
+                        <apex:inputField value="{!Contact.Department}" />
+                    </apex:pageBlockSectionItem>    
+
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Description Information"
+                collapsible="true" columns="1">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Description" for="description" />
+                    <apex:inputField value="{!Contact.Description}" id="description"
+                        style="width: 650px; height: 200px;" />
+                </apex:pageBlockSectionItem>
+
+            </apex:pageBlockSection>
+            
+            <!-- Sample Additional Information Section
+            
+            <apex:pageBlockSection title="Additional Information"
+                collapsible="true" columns="2">
+
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Languages" for="languages" />
+                        <apex:inputField value="{!Contact.Languages__c}" id="languages" />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Level" for="level" />
+                        <apex:inputField value="{!Contact.Level__c}" id="level" />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>
+            
+             -->
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!createRecordPage}" value="Save"
+                    id="createRecordBtn" />
+                <apex:commandButton action="{!goBack}" value="Cancel" id="cancelBtn" />
+<!--                <apex:commandButton action="{!resetFields}" value="Clear"-->
+<!--                    id="theReset" onclick="resetFields();"-->
+<!--                    reRender="errorMessages,ttlchkJsonSearchResults,dataTableId" />-->
+            </apex:pageBlockButtons>
+
+            <apex:outputPanel id="ttlchkJsonFieldValues" layout="block">
+                <script type="text/javascript">
+                    var ttlchk_json_field_values = {};
+                    //ttlchk_json_field_values['time'] = new Date().getTime();
+                    var addr = '{!addr}';
+                    if(addr == '2')
+                    {
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection2.streetItem1.address1}'] = '{!JSENCODE(addressItemInstance.street)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection2.suburbItem1.suburb1}'] = '{!JSENCODE(addressItemInstance.suburb)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection2.postcodeItem1.postcode1}'] = '{!JSENCODE(addressItemInstance.postcode)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection2.stateItem1.state1}'] = '{!JSENCODE(addressItemInstance.state)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection2.countryItem1.OtherCountry}'] = 'Australia';
+                    }
+                    else
+                    {
+                        ttlchk_json_field_values['{!$Component.mainFormSection.mainFormSection1.formFields.pName}'] = '{!JSENCODE(addressItemInstance.primaryName)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection1.streetItem.address}'] = '{!JSENCODE(addressItemInstance.street)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection1.suburbItem.suburb}'] = '{!JSENCODE(addressItemInstance.suburb)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection1.postcodeItem.postcode}'] = '{!JSENCODE(addressItemInstance.postcode)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection1.stateItem.state}'] = '{!JSENCODE(addressItemInstance.state)}';
+                        ttlchk_json_field_values['{!$Component.addressSection.addressSection1.countryItem.MailingCountry}'] = 'Australia';
+                        ttlchk_json_field_values['{!$Component.mainFormSection.mainFormSection2.phoneItem.phoneNumber}'] = '{!JSENCODE(phoneNumber)}';
+                        ttlchk_json_field_values['{!$Component.mainFormSection.mainFormSection2.mobileItem.mobilePhone}'] = '{!JSENCODE(mobilePhoneNumber)}';
+                        ttlchk_json_field_values['{!$Component.mainFormSection.mainFormSection2.otherPhoneItem.otherPhone}'] = '{!JSENCODE(otherPhoneNumber)}';
+                    }
+                </script>
+            </apex:outputPanel>
+
+            <apex:outputPanel id="ttlchkJsonSearchResults" layout="block">
+                <script>
+                    var ttlchk_json_name_has_results = !{!hasNoNames};
+                    var ttlchk_json_name_search_results = {!resultNames};
+                    var ttlchk_json_address_has_results = !{!hasNoAddress};
+                    var ttlchk_json_address_detail_results = {!detailAddresses};
+                    var ttlchk_json_address_map = {{!addressResultsJSONMap}};
+                </script>
+            </apex:outputPanel>
+
+            <!--
+                <b>DPID:</b><apex:outputText value="{!JSINHTMLENCODE(addressItemInstance.dpid)}"></apex:outputText>
+                <b>WP Listing Type:</b><apex:outputText value="{!JSINHTMLENCODE(addressItemInstance.wplistingType)}"></apex:outputText>
+                <b>Barcode:</b><apex:outputText value="{!JSINHTMLENCODE(addressItemInstance.barcode)}"></apex:outputText>
+             -->
+
+        </apex:pageBlock>
+
+    </apex:form>
+
+    </body>
+
+</apex:page>

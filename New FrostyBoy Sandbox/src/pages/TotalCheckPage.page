@@ -1,0 +1,337 @@
+<apex:page Controller="TotalCheckPageController" sidebar="false" id="thePage" cache="false" action="{!pageAction}">
+<head>
+<script type="text/javascript" src="{!URLFOR($Resource.TCAutoSuggest, 'autocomplete.js')}"></script>
+<apex:stylesheet value="{!URLFOR($Resource.TCAutoSuggest, 'autocomplete.css')}"/> 
+<apex:includeScript value="{!URLFOR($Resource.jQueryUI, '/core/jquery-1.4.3.min.js')}" />
+<style>
+    .cField{
+        width:300px; 
+    }  
+</style> 
+<script type="text/javascript">
+		document.onclick=function(e){
+			$('.suggestions').children().attr("style", "display:none");
+		}
+		
+        var ttlchk_current_field = '';
+        var ttlchk_current_suggest_div = '';
+        //This is a small workaround for getting the component to work with the enter key
+        function noenter(e){
+ 
+             var key;    
+             if(window.event)
+                  key = window.event.keyCode; //IE
+             else
+                  key = e.which; //firefox    
+             return (key != 13);    
+
+        }
+        
+        function setFocusAndValue(element, value) {
+            element = (typeof element == 'string')?document.getElementById(element):element;
+            if(element) {
+                element.value = value;
+                // focus() not properly supported in some browsers due blur events preceding it 
+                setTimeout(function(){element.focus();}, 100);
+            }
+        }
+        
+        function fireAddressSearch(field, addressFieldId, addressSuggestId, tempField, addressSearchFn, addressCallback) {
+            var address = document.getElementById(addressFieldId);
+            var addressSuggest = document.getElementById(addressSuggestId);
+            if(field.value == '' || field.value == null || (typeof field.isValid != 'undefined' && field.isValid == false)) //ignore if isValid is not set
+                return;
+                
+            setFocusAndValue(address, '');
+            new AutoComplete(addressFieldId, addressSuggestId, tempField, addressSearchFn, addressCallback, true);
+        }
+        
+        function updateAddressFields() {
+            var hasDetailList = document.getElementById('{!$Component.mainForm.hasDetailListHd}').value;
+            for(var key in ttlchk_json_field_values) {
+                    var field = document.getElementById(key);
+                    var value = ttlchk_json_field_values[key];
+                    field.value = value;
+                }
+            if(hasDetailList === true || hasDetailList == 'true') {
+                // handle events for detail list
+                new AutoComplete(ttlchk_current_field, ttlchk_current_suggest_div.id + '_dl', '{!$Component.mainForm.hiddenInputFld}', function(){return;}, selectAddressDetailfn);
+                updateSuggestions(ttlchk_current_field.id, ttlchk_current_suggest_div.id + '_dl', ttlchk_json_address_detail_results, false);
+                document.getElementById('{!$Component.mainForm.hasDetailListHd}').value = false;
+                }
+            else {
+            }
+        }
+        
+        function updateSuggestions(searchField, suggestionDiv, resultsObj, hasNoNames) {
+            var isArray = (typeof resultsObj.length != 'undefined'); // unlikely that object has attribute 'length' 
+            searchField = (typeof searchField == 'string')?document.getElementById(searchField):searchField;
+            suggestionDiv = (typeof suggestionDiv == 'string')?document.getElementById(suggestionDiv):suggestionDiv;
+                            
+            if((typeof searchField.isSearchCancelled != 'undefined') && searchField.isSearchCancelled == true)
+                return;
+            
+            ttlchk_current_field = searchField;
+            ttlchk_current_suggest_div = suggestionDiv;
+            
+            var strid = suggestionDiv.id;
+            var suggestions = suggestionDiv.children[0]; // <div><div></div></div>
+            suggestions.innerHTML = '';
+            
+            for(var key in resultsObj) {
+                var myElement = document.createElement('div');
+                var value = resultsObj[key];
+                if(hasNoNames)
+                    myElement.id = strid + 'N_R';
+                
+                var textNode = document.createTextNode(isArray?value:key);
+                    
+                myElement.appendChild(textNode);
+                if(!isArray && value) {
+                    myElement.className = 'wp';
+                }
+                suggestions.appendChild(myElement);
+            }
+            var count;
+            if(!isArray) {
+                for (var k in resultsObj) {
+                    if (resultsObj.hasOwnProperty(k)) {
+                       ++count;
+                    }
+                }
+            }
+            else {
+                count = resultsObj.length;
+                }
+            if(count > 0)
+                suggestionDiv.style.display = 'block';
+        }
+        
+        function initAutoComplete(isValidate) {
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.address}','{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.addressSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfn, selectAddressesfn);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.suburb}','{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.suburbSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnSuburb, selectAddressesfn);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.state}','{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.stateSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnState, selectAddressesfn);
+            // Display search results under postcode field - least obstructive
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.postcode}','{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.postcodeSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnPostcode, selectAddressesfn, isValidate);
+            new AutoComplete('{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.phoneNumber}','{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.phoneNumberSuggestWrap}', '{!$Component.mainForm.hiddenInputFld}', searchAddressesfnPhone, selectAddressesfn);
+        }
+        
+        function resetFields() {
+            for(var key in ttlchk_json_field_values) {
+                var field = document.getElementById(key);
+                ttlchk_json_field_values[key] = '';
+                field.value = '';
+            }
+            
+            initAutoComplete();
+        }
+        
+        function disableautocomplete() {
+          var forms = document.getElementsByTagName('form');
+          
+          for (var i = 0; i < forms.length; ++i) {
+            if (forms[i].setAttribute) {
+              forms[i].setAttribute('autocomplete', 'off')
+            } else {
+              forms[i].autocomplete = 'off'
+            }
+          }
+        }
+        
+        //Initialize onload
+        var oldonload = window.onload;
+        // initialize autocomplete fields and disable browser auto suggest on form fields
+        var newonload = function(){
+                            disableautocomplete(); 
+                            if({!isValidate}) { // Focus on postcode field before initializing search else search might cancel
+                                document.getElementById('{!$Component.mainForm.thePageBlockId.mainFormSection.formFields.postcode}').focus();
+                            }
+                            initAutoComplete({!isValidate}); 
+                            };
+        if (typeof window.onload != 'function') {
+          window.onload = newonload;
+        } 
+        else {
+          window.onload = function() {
+            oldonload();
+            newonload();
+          }
+        }
+</script>
+</head>
+<body>
+    <apex:form id="mainForm">
+        <apex:inputHidden value="{!inputHiddenValue}" id="hiddenInputFld"/>
+        <apex:inputHidden value="{!hasDetailList}" id="hasDetailListHd"/>
+        
+        <apex:actionFunction action="{!searchNames}" name="searchNamesfn" reRender="ttlchkJsonSearchResults,errorMessages" oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.formFields.pName}', '{!$Component.thePageBlockId.mainFormSection.formFields.primaryNameSuggestWrap}', ttlchk_json_name_search_results, !ttlchk_json_name_has_results);"/> 
+        <apex:actionFunction action="{!searchAddresses}" name="searchAddressesfn" reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages" oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.formFields.address}', '{!$Component.thePageBlockId.mainFormSection.formFields.addressSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+        </apex:actionFunction>
+        <apex:actionFunction action="{!searchAddresses}" name="searchAddressesfnSuburb"  reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages" oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.formFields.suburb}', '{!$Component.thePageBlockId.mainFormSection.formFields.suburbSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+        </apex:actionFunction>
+        <apex:actionFunction action="{!searchAddresses}" name="searchAddressesfnState"  reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages" oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.formFields.state}', '{!$Component.thePageBlockId.mainFormSection.formFields.stateSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+        </apex:actionFunction>
+        <apex:actionFunction action="{!searchAddresses}" name="searchAddressesfnPostcode"  reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages" oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.formFields.postcode}', '{!$Component.thePageBlockId.mainFormSection.formFields.postcodeSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+        </apex:actionFunction>
+        <apex:actionFunction action="{!searchAddresses}" name="searchAddressesfnPhone"  reRender="ttlchkJsonSearchResults,hasDetailListHd,errorMessages" oncomplete="updateSuggestions('{!$Component.thePageBlockId.mainFormSection.formFields.phoneNumber}', '{!$Component.thePageBlockId.mainFormSection.formFields.phoneNumberSuggestWrap}', ttlchk_json_address_map, !ttlchk_json_address_has_results);">
+            <apex:param value="" name="timestamp" />
+        </apex:actionFunction>
+        <apex:actionFunction action="{!selectAddress}" name="selectAddressesfn" reRender="ttlchkJsonFieldValues,ttlchkJsonSearchResults,hasDetailListHd,recordCount,errorMessages" oncomplete="updateAddressFields();" status="Status1"/>
+        <apex:actionFunction action="{!selectAddressDetail}" name="selectAddressDetailfn" reRender="ttlchkJsonFieldValues,errorMessages" status="Status1" oncomplete="updateAddressFields();"/>
+
+        <apex:pageBlock id="ErrorMessageBlock" rendered="{!NOT(showPage)}">
+            <apex:image value="{!URLFOR($Resource.TCAutoSuggest, 'Powered_By_TC_Logo.jpg')}"/>
+            <apex:pageMessages />
+        </apex:pageBlock>
+        
+        <apex:pageBlock id="thePageBlockId" rendered="{!showPage}">
+            <!-- <table width="100%">
+            <tr>
+            <td width="40%">  -->
+            <apex:pageBlockSection >
+                <apex:image value="{!URLFOR($Resource.TCAutoSuggest, 'Powered_By_TC_Logo.jpg')}"/>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="recordCount" rendered="{!showUsageCount}">
+                <apex:outputText >No. of records retrieved so far : {!usageCount}</apex:outputText>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection >
+            
+                <apex:pageBlockSectionItem >
+                    <b> Enter Customer Details </b>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel id="errorMessages">
+                        <apex:outputText value="{!errorMessage}" rendered="{!hasError}" style="font-style:normal;font-weight: bold;color:red;"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >     
+                    <apex:selectRadio value="{!searchType}">
+                        <apex:selectOptions value="{!searchTypes}"/>
+                    </apex:selectRadio>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value=""/>
+                    <apex:actionStatus id="Status1">
+                            <apex:facet name="start">
+                                <img src="/img/loading.gif" align="left" /> 
+                            </apex:facet>
+                        </apex:actionStatus>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" id="mainFormSection">
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="formFields">
+                    <apex:outputPanel >
+                    <tr>
+                        <td class="labelCol"><apex:outputLabel value="Primary Name" for="pName"/></td>
+                        <td class="data2Col">
+                            <apex:inputText value="{!primaryName}"  styleClass="cField" id="pName" onkeypress="return noenter(event)" onfocus="self_=this;new AutoComplete('{!$Component.pName}','{!$Component.primaryNameSuggestWrap}', '', searchNamesfn, function(){fireAddressSearch(self_, '{!$Component.address}', '{!$Component.addressSuggestWrap}', '{!$Component.hiddenInputFld}', searchAddressesfn, selectAddressesfn);});return false;" tabindex="1"/>
+                            <apex:outputPanel id="primaryNameSuggestWrap" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </td>               
+                    </tr>
+                    <tr>
+                        <td class="labelCol"><apex:outputLabel value="Address" for="address"/></td>
+                        <td class="data2Col">
+                            <apex:inputText value="{!address}" styleClass="cField" id="address" onkeypress="return noenter(event)" tabindex="2"/>
+                            <apex:outputPanel id="addressSuggestWrap" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="addressSuggestWrap_dl" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </td>                   
+                    </tr>
+                    <tr>
+                        <td class="labelCol"><apex:outputLabel value="Suburb" for="suburb"/></td>
+                        <td class="data2Col">
+                            <apex:inputText value="{!suburb}" styleClass="cField" id="suburb" onkeypress="return noenter(event)" tabindex="3"/>
+                            <apex:outputPanel id="suburbSuggestWrap" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="suburbSuggestWrap_dl" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </td>                   
+                    </tr>
+                    <tr>
+                        <td class="labelCol"><apex:outputLabel value="State" for="state"/></td>
+                        <td class="data2Col">
+                            <apex:inputText value="{!state}" styleClass="cField" id="state" onkeypress="return noenter(event)" tabindex="4"/>
+                            <apex:outputPanel id="stateSuggestWrap" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="stateSuggestWrap_dl" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </td>                   
+                    </tr>
+                    <tr>
+                        <td class="labelCol"><apex:outputLabel value="Postcode" for="postcode"/></td>
+                        <td class="data2Col">
+                            <apex:inputText value="{!postcode}" styleClass="cField" id="postcode" onkeypress="return noenter(event)" tabindex="5"/>
+                            <apex:outputPanel id="postcodeSuggestWrap" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="postcodeSuggestWrap_dl" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </td>                   
+                    </tr>
+                    <tr>
+                        <td class="labelCol"><apex:outputLabel value="Phone Number" for="postcode"/></td>
+                        <td class="data2Col">
+                            <apex:inputText value="{!phoneNumber}" styleClass="cField" id="phoneNumber" onkeypress="return noenter(event)" tabindex="6"/>
+                            <apex:outputPanel id="phoneNumberSuggestWrap" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="phoneNumberSuggestWrap_dl" layout="block" styleClass="autocomplete">
+                                <div class="suggestions"></div>
+                            </apex:outputPanel>
+                        </td>                   
+                    </tr>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton action="{!resetFields}" value="Reset" id="theReset" onclick="resetFields();" tabindex="7" reRender="errorMessages,ttlchkJsonSearchResults,dataTableId"/>
+                    <apex:commandButton action="{!goBack}" value="Cancel" id="cancelBtn" tabindex="8"/>
+                    <apex:commandButton action="{!createRecordPage}" value="Next" id="createRecordBtn" tabindex="9"/>
+            </apex:pageBlockButtons>
+            <apex:outputPanel id="ttlchkJsonFieldValues" layout="block">
+                <script type="text/javascript">
+                    var ttlchk_json_field_values = {};
+                    //ttlchk_json_field_values['time'] = new Date().getTime();
+                    ttlchk_json_field_values['{!$Component.mainFormSection.formFields.pName}'] = '{!JSENCODE(addressItemInstance.primaryName)}';
+                    ttlchk_json_field_values['{!$Component.mainFormSection.formFields.address}'] = '{!JSENCODE(addressItemInstance.street)}';
+                    ttlchk_json_field_values['{!$Component.mainFormSection.formFields.suburb}'] = '{!JSENCODE(addressItemInstance.suburb)}';
+                    ttlchk_json_field_values['{!$Component.mainFormSection.formFields.postcode}'] = '{!JSENCODE(addressItemInstance.postcode)}';
+                    ttlchk_json_field_values['{!$Component.mainFormSection.formFields.state}'] = '{!JSENCODE(addressItemInstance.state)}';
+                    ttlchk_json_field_values['{!$Component.mainFormSection.formFields.phoneNumber}'] = '{!JSENCODE(phoneNumber)}';
+                </script>
+            </apex:outputPanel>
+            <apex:outputPanel id="ttlchkJsonSearchResults" layout="block">
+                <script>
+                    var ttlchk_json_name_has_results = !{!hasNoNames};
+                    var ttlchk_json_name_search_results = {!resultNames};
+                    var ttlchk_json_address_has_results = !{!hasNoAddress};
+                    var ttlchk_json_address_detail_results = {!detailAddresses};
+                    var ttlchk_json_address_map = {{!addressResultsJSONMap}};
+                </script>
+            </apex:outputPanel>
+            
+        </apex:pageBlock>
+    </apex:form>
+    </body>
+</apex:page>

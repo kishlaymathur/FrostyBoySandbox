@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Purchase</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Purchases</value>
+    </caseValues>
+    <fields>
+        <label><!-- Invoice Number --></label>
+        <name>Invoice_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Item --></label>
+        <name>Machine__c</name>
+        <relationshipLabel><!-- Purchases --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Purchase Cost --></label>
+        <name>Purchase_Cost__c</name>
+    </fields>
+    <fields>
+        <label><!-- Purchase Date --></label>
+        <name>Purchase_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Quantity --></label>
+        <name>Quantity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Spare Part Used --></label>
+        <name>Spare_Part_Used__c</name>
+    </fields>
+    <fields>
+        <label><!-- Spare Parts Remaining --></label>
+        <name>Spare_Parts_Remaining__c</name>
+    </fields>
+    <fields>
+        <label><!-- Supplier Name --></label>
+        <name>Supplier_Name__c</name>
+        <relationshipLabel><!-- Purchases --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Machine</masterLabel>
+            <translation><!-- Machine --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Spare Part</masterLabel>
+            <translation><!-- Spare Part --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Unit Price --></label>
+        <name>Unit_Price__c</name>
+    </fields>
+    <layouts>
+        <layout>Purchase Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

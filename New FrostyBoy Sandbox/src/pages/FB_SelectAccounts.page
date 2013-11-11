@@ -1,0 +1,50 @@
+<apex:page controller="FB_selectAccountsController" tabStyle="Campaign" showChat="false" sidebar="false" >
+  
+  <apex:form >
+ 
+      <apex:pageBlock id="pgBlock" title="Select the accounts to add to the campaign" >
+          <apex:pageBlockTable value="{!Accounts}" var="acc">
+              <apex:column width="50px">
+                        <apex:facet name="header" > 
+                            <apex:inputCheckbox id="CheckHeader" onclick="checkAll(this)"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!acc.isChecked}" id="selectAll" />
+                    </apex:column>
+              <apex:column headerValue="Name" value="{!acc.instance.name}"/>
+              <apex:column headerValue="Type" value="{!acc.instance.type}"/>
+              <apex:column headerValue="Status" value="{!acc.instance.Account_Status__c}"/>
+          </apex:pageBlockTable>
+          <apex:panelGrid columns="4" id="panelGrid">
+                   <apex:commandLink action="{!first}" reRender="pgBlock" status="startLoad">First</apex:commandlink>
+                   <apex:commandLink action="{!previous}" rendered="{!hasPrevious}" reRender="pgBlock" status="startLoad">Previous</apex:commandlink>
+                   <apex:commandLink action="{!next}" rendered="{!hasNext}" reRender="pgBlock" status="startLoad">Next</apex:commandlink>
+                   <apex:commandLink action="{!last}" reRender="pgBlock" status="startLoad">Last</apex:commandlink>
+                   <div style="position:absolute;right:15px;">Page<b>#{!pageNumber}</b></div>
+               </apex:panelGrid> 
+          <apex:commandButton value="Submit" action="{!submit}"/>
+      </apex:pageBlock>
+      
+      <apex:actionstatus id="startLoad">
+            <apex:facet name="start">             
+                <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;height: 100%;opacity:0.65;width:100%;"> 
+                    <div class="waitingHolder" > 
+                        <img class="waitingImage" src="/img/loading.gif"  title="Please Wait..." /> 
+                        <span class="waitingDescription">Loading...</span>
+                    </div> 
+                </div>                      
+            </apex:facet>
+        </apex:actionstatus>
+        
+  </apex:form>
+  
+  <script>
+        function checkAll(cb){
+            var inputElem = document.getElementsByTagName("input");
+            for(var i=0; i<inputElem.length; i++){
+                if(inputElem[i].id.indexOf("selectAll")!=-1)
+                    inputElem[i].checked = cb.checked;
+                }
+        }
+  </script>
+  
+</apex:page>

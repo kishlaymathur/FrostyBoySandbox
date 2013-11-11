@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AutoResponseRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <autoResponseRule>
+        <fullName>Auto-Response-WebLead</fullName>
+        <active>true</active>
+        <ruleEntry>
+            <booleanFilter>1 OR 2 OR 3</booleanFilter>
+            <criteriaItems>
+                <field>Lead.LeadSource</field>
+                <operation>equals</operation>
+                <value>FrostyBoy.com.au</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Lead.LeadSource</field>
+                <operation>equals</operation>
+                <value>FrostyBoyEquipment.com.au</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Lead.LeadSource</field>
+                <operation>equals</operation>
+                <value>FrozenYohgurt.com.au</value>
+            </criteriaItems>
+            <senderEmail>info@frostyboy.com.au</senderEmail>
+            <senderName>Frosty Boy Team</senderName>
+            <template>unfiled$public/Web_To_Lead_Auto_Response_Mailf</template>
+        </ruleEntry>
+    </autoResponseRule>
+</AutoResponseRules>

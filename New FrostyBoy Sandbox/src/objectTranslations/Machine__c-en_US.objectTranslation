@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Machine</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Machines</value>
+    </caseValues>
+    <fields>
+        <label><!-- Commissioned --></label>
+        <name>Commissioned__c</name>
+    </fields>
+    <fields>
+        <label><!-- Current Machine Location --></label>
+        <name>Current_Machine_Location__c</name>
+        <relationshipLabel><!-- Machines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Date Purchased --></label>
+        <name>Date_Purchased__c</name>
+    </fields>
+    <fields>
+        <label><!-- Item --></label>
+        <name>Item__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Service Date --></label>
+        <name>Last_Service_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Location Count --></label>
+        <name>Location_Count__c</name>
+    </fields>
+    <fields>
+        <label><!-- Machine Decals --></label>
+        <name>Machine_Decals__c</name>
+        <picklistValues>
+            <masterLabel>Custom Made</masterLabel>
+            <translation><!-- Custom Made --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Frosty Boy Bubbles</masterLabel>
+            <translation><!-- Frosty Boy Bubbles --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Frosty Boy Wave</masterLabel>
+            <translation><!-- Frosty Boy Wave --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Frozen Yoghurt</masterLabel>
+            <translation><!-- Frozen Yoghurt --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Generic</masterLabel>
+            <translation><!-- Generic --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Machine Status --></label>
+        <name>Machine_Status__c</name>
+    </fields>
+    <fields>
+        <label><!-- Minimum Stock --></label>
+        <name>Minimum_Stock__c</name>
+    </fields>
+    <fields>
+        <label><!-- Model Type --></label>
+        <name>Model_Type__c</name>
+        <picklistValues>
+            <masterLabel>Classic 1</masterLabel>
+            <translation><!-- Classic 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Smach 1500</masterLabel>
+            <translation><!-- Smach 1500 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Smach 1500P</masterLabel>
+            <translation><!-- Smach 1500P --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Smach 2500P</masterLabel>
+            <translation><!-- Smach 2500P --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Taylor 152</masterLabel>
+            <translation><!-- Taylor 152 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Taylor 161</masterLabel>
+            <translation><!-- Taylor 161 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Taylor 430</masterLabel>
+            <translation><!-- Taylor 430 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Taylor C723</masterLabel>
+            <translation><!-- Taylor C723 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Monthly Payment Amount --></label>
+        <name>Monthly_Payment_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Preventive Maintenance Days --></label>
+        <name>Preventing_M__c</name>
+    </fields>
+    <fields>
+        <label><!-- Spare Parts Remaining --></label>
+        <name>Spare_Parts_Remaining__c</name>
+    </fields>
+    <fields>
+        <label><!-- Spare Parts Used --></label>
+        <name>Spare_Parts_Used1__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Quantity --></label>
+        <name>Total_Quantity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Unit Cost --></label>
+        <name>Unit_Cost__c</name>
+    </fields>
+    <layouts>
+        <layout>Machine Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Maintainance Information --></label>
+            <section>Maintainance Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Spare Part PL</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <recordTypes>
+        <label><!-- Machine --></label>
+        <name>Machine</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Spare Part --></label>
+        <name>Spare_Part</name>
+    </recordTypes>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

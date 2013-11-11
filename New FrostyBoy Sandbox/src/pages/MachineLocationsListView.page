@@ -1,0 +1,10 @@
+<apex:page standardController="Machine_Inventory__c" extensions="MachineLocationExtension" recordSetVar="locations" tabStyle="Machine_Inventory__c">
+    <apex:sectionHeader title="Machine Locations" subtitle="Home"/>
+    <apex:pageBlock >
+        <!--<apex:pageBlockTable value="{!opportunities}" var="o">
+            <apex:column value="{!o.Name}"/>
+            <apex:column value="{!o.CloseDate}"/>
+        </apex:pageBlockTable>-->
+    </apex:pageBlock>  
+    
+</apex:page>

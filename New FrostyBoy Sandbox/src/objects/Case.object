@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>ChangeStatus</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CloneAsChild</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CloseCase</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>MassClose</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>NewCase</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <enableFeeds>true</enableFeeds>
+    <fields>
+        <fullName>AccountId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>AssetId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Bevwizz_Invoice_Number__c</fullName>
+        <externalId>false</externalId>
+        <label>Bevwizz Invoice Number</label>
+        <length>50</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Bevwizz_Notification_Mail_Status__c</fullName>
+        <externalId>false</externalId>
+        <formula>IMAGE( IF( NOT(ISBLANK( Notifcation_Mail_Sent__c )), &quot;/img/samples/flag_green.gif&quot;, &quot;/img/samples/flag_red.gif&quot;), &quot;priority flag&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Bevwizz Notification Mail Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>BusinessHoursId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ContactId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Cost__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Labour Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Cost_incurred_on_Spare_Parts__c</fullName>
+        <externalId>false</externalId>
+        <label>Cost incurred on Spare Parts</label>
+        <summarizedField>Spare_Parts_Used__c.Cost_Incurred__c</summarizedField>
+        <summaryForeignKey>Spare_Parts_Used__c.Case__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Internal_Notification_Mail_Status__c</fullName>
+        <externalId>false</externalId>
+        <formula>IMAGE( IF( NOT(ISBLANK( Internal_Notification_Sent__c )), &quot;/img/samples/flag_green.gif&quot;, &quot;/img/samples/flag_red.gif&quot;), &quot;priority flag&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Internal Notification Mail Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Internal_Notification_Sent__c</fullName>
+        <externalId>false</externalId>
+        <label>Internal Notification Sent</label>
+        <length>150</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Invoice_Attached__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Invoice Attached</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Machine_Inventory__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Machine Inventory</label>
+        <referenceTo>Machine_Inventory__c</referenceTo>
+        <relationshipLabel>Cases</relationshipLabel>
+        <relationshipName>Cases</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Machine__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Machine</label>
+        <referenceTo>Machine__c</referenceTo>
+        <relationshipLabel>Cases</relationshipLabel>
+        <relationshipName>Cases</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Notifcation_Mail_Sent__c</fullName>
+        <externalId>false</externalId>
+        <label>Notifcation Mail Sent</label>
+        <length>150</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Origin</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>Email</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Phone</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Web</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>OwnerId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ParentId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Priority</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>High</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Medium</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Low</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>QuestionId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Reason</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>User didn&apos;t attend training</fullName>
+                <cssExposed>false</cssExposed>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Complex functionality</fullName>
+                <cssExposed>false</cssExposed>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Existing problem</fullName>
+                <cssExposed>false</cssExposed>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Instructions not clear</fullName>
+                <cssExposed>false</cssExposed>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>New problem</fullName>
+                <cssExposed>false</cssExposed>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Machine Commissioning</fullName>
+                <cssExposed>false</cssExposed>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Service Due</fullName>
+                <cssExposed>false</cssExposed>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Revenue__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Revenue</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Serviced_By__c</fullName>
+        <externalId>false</externalId>
+        <label>Serviced By</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Frosty Boy</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Bevwizz</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Status</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>Not started</fullName>
+                <closed>false</closed>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>In progress</fullName>
+                <closed>false</closed>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed</fullName>
+                <closed>true</closed>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Type</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>Problem</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Feature Request</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Question</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Preventive Maintenance</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <listViews>
+        <fullName>AllOpenCases</fullName>
+        <columns>CASES.CASE_NUMBER</columns>
+        <columns>CASES.REASON</columns>
+        <columns>CASES.CREATED_DATE</columns>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>Machine_Inventory__c</columns>
+        <columns>OWNER_NAME</columns>
+        <columns>Serviced_By__c</columns>
+        <columns>Bevwizz_Invoice_Number__c</columns>
+        <columns>Invoice_Attached__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CASES.CLOSED</field>
+            <operation>equals</operation>
+            <value>0</value>
+        </filters>
+        <label>All Open Cases</label>
+    </listViews>
+    <listViews>
+        <fullName>MyCases</fullName>
+        <filterScope>Mine</filterScope>
+        <label>My Cases</label>
+    </listViews>
+    <listViews>
+        <fullName>MyOpenCases</fullName>
+        <filterScope>Mine</filterScope>
+        <filters>
+            <field>CASES.CLOSED</field>
+            <operation>equals</operation>
+            <value>0</value>
+        </filters>
+        <label>My Open Cases</label>
+    </listViews>
+    <searchLayouts>
+        <customTabListAdditionalFields>CASES.CASE_NUMBER</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Machine_Inventory__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>ACCOUNT.NAME</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CASES.SUBJECT</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CASES.CREATED_DATE</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CASES.PRIORITY</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>CASES.CASE_NUMBER</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CASES.SUBJECT</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ACCOUNT.NAME</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CASES.STATUS</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CASES.CASE_NUMBER</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CASES.SUBJECT</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>ACCOUNT.NAME</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CASES.STATUS</lookupPhoneDialogsAdditionalFields>
+        <searchResultsAdditionalFields>CASES.CASE_NUMBER</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CASES.SUBJECT</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CASES.STATUS</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CASES.CREATED_DATE</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CORE.USERS.ALIAS</searchResultsAdditionalFields>
+    </searchLayouts>
+    <webLinks>
+        <fullName>Notify_Bevwizz</fullName>
+        <availability>online</availability>
+        <description>Notify Bevwizz(Service Provider) about the Case and that the machine is due for preventive servicing</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Notify Bevwizz</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)} 
+
+var caseQuery = sforce.connection.query(&quot;select Machine_Inventory__r.Customer__r.BillingStreet,Machine_Inventory__r.Customer__r.BillingCity,Machine_Inventory__r.Customer__r.BillingState,Machine_Inventory__r.Customer__r.BillingCountry,Machine_Inventory__r.Customer__r.BillingPostalCode, Machine_Inventory__r.Last_Service_Date__c, Machine_Inventory__r.Machine_Number__r.Name, Machine_Inventory__r.Machine_Number__r.Model_Type__c from Case where Id= &apos;{!Case.Id}&apos; &quot;);
+var caseDetails = caseQuery.getArray(&quot;records&quot;);
+
+var machineInventoryId = &apos;{!Case.Machine_InventoryId__c}&apos;;
+var accountId = &apos;{!Case.AccountId}&apos;;
+var caseSubject = &apos;{!Case.Subject}&apos;;
+var caseReason = &apos;{!Case.Reason}&apos;;
+
+if(accountId==&apos;&apos;||accountId==null)
+{
+alert(&quot;No Account Related. Please populate the Account field.&quot;);
+}
+else if(caseDetails[0].Machine_Inventory__r.Customer__r.BillingStreet==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingStreet==null||caseDetails[0].Machine_Inventory__r.Customer__r.BillingCity==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingCity==null||caseDetails[0].Machine_Inventory__r.Customer__r.BillingState==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingState==null||caseDetails[0].Machine_Inventory__r.Customer__r.BillingCountry==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingCountry==null||caseDetails[0].Machine_Inventory__r.Customer__r.BillingPostalCode==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingPostalCode==null)
+{
+alert(&quot;Missing Related Account Address Fields. Please fill Billing Address fields in Related Accounts.&quot;);
+}
+
+else
+{
+var result= sforce.connection.query(&quot;select Email_Id__c from Bevwizz_Contact__c where Name= &apos;Bevwizz&apos; &quot;);
+var record= result.getArray(&quot;records&quot;);
+
+var ParentName = sforce.apex.execute(&quot;FB_NotifyCase&quot;,&quot;sendEmailNotification&quot;, {&apos;caseId&apos;: &apos;{!Case.Id}&apos;, &apos;emailId&apos;:record[0].Email_Id__c,&apos;emailId1&apos;:&apos;&apos;,&apos;recipient&apos;:&apos;Bevwizz&apos; });
+alert(&quot;An email has been sent to Bevwizz to inform about the Case&quot;);
+}
+
+var url = parent.location.href; //string for the URL of the current page
+parent.location.href = url; //refresh the page</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Notify_Internal_Users</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Notify Internal Users</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)} 
+
+var caseQuery = sforce.connection.query(&quot;select Machine_Inventory__r.Customer__r.BillingStreet,Machine_Inventory__r.Customer__r.BillingCity,Machine_Inventory__r.Customer__r.BillingState,Machine_Inventory__r.Customer__r.BillingCountry,Machine_Inventory__r.Customer__r.BillingPostalCode, Machine_Inventory__r.Last_Service_Date__c, Machine_Inventory__r.Machine_Number__r.Name, Machine_Inventory__r.Machine_Number__r.Model_Type__c from Case where Id= &apos;{!Case.Id}&apos; &quot;); 
+var caseDetails = caseQuery.getArray(&quot;records&quot;); 
+
+var machineInventoryId = &apos;{!Case.Machine_InventoryId__c}&apos;; 
+var accountId = &apos;{!Case.AccountId}&apos;; 
+var caseSubject = &apos;{!Case.Subject}&apos;; 
+var caseReason = &apos;{!Case.Reason}&apos;; 
+
+if(accountId==&apos;&apos;||accountId==null) 
+{ 
+alert(&quot;No Related Account &quot;); 
+} 
+else if(caseDetails[0].Machine_Inventory__r.Customer__r.BillingStreet==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingStreet==null||caseDetails[0].Machine_Inventory__r.Customer__r.BillingCity==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingCity==null||caseDetails[0].Machine_Inventory__r.Customer__r.BillingState==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingState==null||caseDetails[0].Machine_Inventory__r.Customer__r.BillingCountry==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingCountry==null||caseDetails[0].Machine_Inventory__r.Customer__r.BillingPostalCode==&apos;&apos;||caseDetails[0].Machine_Inventory__r.Customer__r.BillingPostalCode==null)
+{ 
+alert(&quot;Missing Related Account Address Fields&quot;); 
+} 
+
+else 
+{ 
+var result= sforce.connection.query(&quot;select Email_Id__c from Bevwizz_Contact__c where Internal_User__c = true &quot;); 
+var record= result.getArray(&quot;records&quot;); 
+
+var ParentName = sforce.apex.execute(&quot;FB_NotifyCase&quot;,&quot;sendEmailNotification&quot;, {&apos;caseId&apos;: &apos;{!Case.Id}&apos;, &apos;emailId&apos;:record[0].Email_Id__c,&apos;emailId1&apos;:record[1].Email_Id__c,&apos;recipient&apos;:&apos;John/Felipe&apos; }); 
+alert(&quot;An email has been sent to Internal Users to inform about the Case&quot;);
+}
+var url = parent.location.href; //string for the URL of the current page
+parent.location.href = url; //refresh the page</url>
+    </webLinks>
+</CustomObject>

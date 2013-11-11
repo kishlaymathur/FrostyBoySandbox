@@ -1,0 +1,148 @@
+<apex:page standardController="Account" extensions="FB_MapsByDistributorController" id="gmap2" sidebar="false" tabStyle="Maps__tab">
+<apex:sectionHeader title="Locate Accounts by" subtitle="{!Name}"/>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.js"></script> 
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script> 
+    <script>
+        var geocoder;
+        var map;
+
+        var arr = new Array();
+        var places = [];
+        var popup_content = [ /* all your popup_content */];
+        var markerIconColor = [ /* all your marker Color Category */];
+        var address = [/* all of your addresses */];
+        var address_position = 0;
+        var bounds = new google.maps.LatLngBounds();
+        var infowindow = new google.maps.InfoWindow(); 
+        var timeout = 600;
+        var recordIds = [ /* all your recordIds */];
+
+        function initialize() {
+            arr = new Array();
+            places = [];
+            popup_content = [ /* all your popup_content */];
+            markerIconColor = [ /* all your marker Color Category */];
+             recordIds = [ /* all your record Ids */];
+            address = [/* all of your addresses */];
+            address_position = 0;
+            bounds = new google.maps.LatLngBounds();
+            infowindow = new google.maps.InfoWindow(); 
+            timeout = 600;
+            geocoder = new google.maps.Geocoder(); 
+            var myOptions = {
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false
+            }            
+            map = new google.maps.Map(document.getElementById("map-canvas"), myOptions );
+        }
+
+        function getMap(isActive,isNotActive,isLead,recordId) {  
+            //alert('hi');
+            Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.FB_MapsByDistributorController.getAddresses}',
+            isActive,isNotActive,isLead,recordId, 
+            function(result, event){
+                if (event.status) {
+                initialize(); 
+                
+                for( var x =0; x<result.length; x++){
+                    address.push(result[x].split("#;")[0]);
+                    
+                    popup_content.push(result[x].split("#;")[1]);
+                    markerIconColor.push(result[x].split("#;")[2]);
+                    recordIds.push(result[x].split("#;")[3]);
+                }
+                addMarker(address_position);
+                map.fitBounds(bounds);
+                } 
+                else if (event.type === 'exception') {
+                
+                    alert(event.message);
+                    //document.getElementById("responseErrors").innerHTML = event.message;
+                } else {
+                    //document.getElementById("responseErrors").innerHTML = event.message;
+                }
+            }, 
+            {escape: true}
+            );alert(result[x].split("#;")[0]);
+        }  
+
+        function addMarker(position)
+        {
+            var infowindow = new google.maps.InfoWindow(); 
+            geocoder.geocode({'address': address[position]}, function(results, status)
+            {
+                if(!bounds){
+                    bounds = new google.maps.LatLngBounds();
+                }
+                if (status == google.maps.GeocoderStatus.OK) {
+                    places[position] = results[0].geometry.location;
+                    bounds.extend(results[0].geometry.location);
+                    if(address_position == '0'){
+                        map.setCenter(results[0].geometry.location); 
+                    }
+                    var markerIconImage;
+                    if(markerIconColor[position] == 'Yellow'){
+                        markerIconImage = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+                    }
+                    else if(markerIconColor[position] == 'Green'){
+                        markerIconImage = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+                    }
+                    else if(markerIconColor[position] == 'Red'){
+                        markerIconImage = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+                    }
+                    else{
+                        markerIconImage = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+                    }
+                    var marker = new google.maps.Marker({
+                        position: results[0].geometry.location,
+                        title: results[0].formatted_address,
+                        icon :markerIconImage,
+                        map: map
+                    });
+
+                    google.maps.event.addListener(marker, 'click', function() {
+                        if (!infowindow) {
+                            infowindow = new google.maps.InfoWindow();
+                        }
+                        var htmlContent = '<html><a href="/' + recordIds[position] + '"> <b>' + popup_content[position] + '</b></a></html>'; 
+                        infowindow.setContent(htmlContent);
+                        infowindow.open(map, marker);
+                    });
+                }
+                else
+                {
+                    if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT)
+                    {
+                        setTimeout(function() { addMarker(position); }, (timeout * 3));
+                    }
+                }
+                address_position++;
+                if (address_position < address.length)
+                {
+                    setTimeout(function() { addMarker(address_position); }, (timeout));
+                }
+            });
+        }
+    </script>
+    </head>
+    <apex:form >
+    <apex:commandLink value="<<Back to Account" action="{!BackToAccount}"/><br/>
+    <apex:outputLabel value="Choose the Accounts you'd like to view on Map based on Account status: "></apex:outputLabel><br/>
+    <apex:outputLabel value="Active "></apex:outputLabel>
+    <apex:inputCheckbox value="{!isActive}" selected="true"/>&nbsp;&nbsp;
+    <apex:outputLabel value="Inactive "></apex:outputLabel>
+    <apex:inputCheckbox value="{!isNotActive}" selected="false"/>&nbsp;&nbsp;
+    <apex:outputLabel value="Lead "></apex:outputLabel>
+    <apex:inputCheckbox value="{!isLead}" selected="false"/><br/>
+    <apex:commandButton value="Go" action="{!Go}" id="GoButton" oncomplete="getMap('{!isActive}','{!isNotActive}','{!isLead}','{!selectedValue}')" reRender="gmap"/>
+    
+    </apex:form>
+    <body>
+        <div id="map-canvas" style="width: 1200px; height: 600px;">
+        </div>
+    </body>
+</apex:page>

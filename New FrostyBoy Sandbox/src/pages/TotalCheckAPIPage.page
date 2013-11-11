@@ -1,0 +1,64 @@
+<apex:page controller="TotalCheckAPIController" title="TotalCheck Administration Page" sidebar="true">
+
+<apex:form id="form1">
+
+<apex:sectionHeader title="Whitepages TotalCheck" subtitle="Administration Page" help="http://appexchange.salesforce.com/listingDetail?listingId=a0N30000004fvkzEAA" />
+
+<apex:pageMessages />
+
+<apex:pageBlock >
+
+    <apex:pageBlockButtons location="bottom">
+        <apex:commandButton value=" Save " action="{!save}" />
+        <apex:commandButton value=" Cancel " action="{!cancel}" />
+    </apex:pageBlockButtons>
+
+    <apex:pageBlockSection columns="2" title="  Production Login Details" collapsible="true" >
+    
+        <apex:pageBlockSectionItem helpText="Your TotalCheck Username supplied by Sensis after you have purchased Whitepages TotalCheck">
+            <apex:outputLabel for="tcusername" value="TotalCheck Username"/>
+            <apex:inputText value="{!username}" id="tcusername"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem helpText="Your TotalCheck Password supplied by Sensis after you have purchased Whitepages TotalCheck">
+            <apex:outputLabel for="tcpassword" value="TotalCheck Password"/>
+            <apex:inputSecret value="{!password1}" redisplay="true" id="tcpassword"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem helpText="Please reconfirm your TotalCheck Password supplied by Sensis after you have purchased Whitepages TotalCheck">
+            <apex:outputLabel for="tcrepassword" value="Confirm Password"/>
+            <apex:inputSecret value="{!password2}" redisplay="true" id="tcrepassword"/>
+        </apex:pageBlockSectionItem>
+   
+    </apex:pageBlockSection> 
+        
+    <apex:pageBlockSection columns="2" title="  Administration Information" collapsible="true">
+        
+        <apex:pageBlockSectionItem helpText="Displays the number of records that you have validated against the Whitepages TotalCheck webservice" >
+            <apex:outputLabel for="tcusage" value="Usage Count" />
+            <apex:outputText value="{!usageCount}" id="tcusage"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem helpText="Displays the number of records you can validate against while on free trial" >
+            <apex:outputLabel for="freeTrialCount" value="Free Trial Count" />
+            <apex:outputText value="100" id="freeTrialCount"/>
+        </apex:pageBlockSectionItem>
+    
+    </apex:pageBlockSection>
+     
+    <apex:pageBlockSection columns="2" title="  Promotion Information" collapsible="true">
+        
+        <apex:pageBlockSectionItem helpText="Promotion Code supplied by Seniss in order to get additional free records validated">
+            <apex:outputLabel for="tcusername" value="Promotion Code"/>
+            <apex:inputText value="{!promoCode}" id="tcpromocode" disabled="{!NOT(promoCodeFieldEditable)}"/>
+        </apex:pageBlockSectionItem>
+        
+    </apex:pageBlockSection>
+    
+    </apex:pageBlock>
+    
+  </apex:form>
+  
+</apex:page>

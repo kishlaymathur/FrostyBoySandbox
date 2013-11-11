@@ -1,0 +1,13 @@
+#Mon Nov 11 17:14:37 IST 2013
+eclipse.preferences.version=1
+endpointApiVersion=27.0
+endpointEnvironment=Sandbox
+endpointServer=test.salesforce.com
+httpsProtocol=true
+ideVersion=27.0
+keependpoint=false
+metadataFormatVersion=27.0
+namespacePrefix=
+packageName=unpackaged
+readTimeout=400
+username=felipe@frostyboy.com.au.sandbox

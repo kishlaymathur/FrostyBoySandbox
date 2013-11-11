@@ -1,0 +1,92 @@
+<apex:page standardController="Campaign" extensions="FB_CreateFilterCriteriaController2" tabStyle="Campaign" id="pageId">
+    <apex:includeScript value="{!URLFOR($Resource.jQuery,'/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery,'/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery,'/jquery-ui-1.10.3.custom/css/start/jquery-ui-1.10.3.custom.css')}"/> 
+    <apex:sectionHeader title="Campaign" subtitle="Add Account Campaign Members"/>
+    <script>
+        $j = jQuery.noConflict();
+        
+        $j(function() {
+        $j( "#dialog" ).dialog({
+        autoOpen: false,
+        show: {
+        effect: "explode",
+        duration: 1000
+        },
+        hide: {
+        effect: "explode",
+        duration: 1000
+        }
+        });
+        });
+        
+        function opendialog()
+        {
+            
+           
+            $j("#dialog").dialog("open");
+            return false;
+        };
+        function closedialog(a)
+        {
+            document.getElementById('pageId.form2.pgBlock2.pgBlockSection.theGrid.innerPanelGrid.selectedValue').value=a;
+            //document.getElementById('{!$Component.pageId:form2:pgBlock2:pgBlockSection:theGrid:innerPanelGrid:selectedValue}')=a;
+            //valu.value ='a';
+            //var ab=$j('#selectedValue').val();
+            alert(a);
+            $j("#selectedValue").val(a);
+
+            $j("#dialog").dialog("close");
+            return false;
+        };
+       
+    </script>
+    <div id="dialog">
+        
+        <apex:form id="form1">
+            <apex:pageBlock id="pageBlock1" >
+                <ol id="selectable">
+                    
+                        <apex:repeat value="{!popwrap}" var="pw">
+                            <apex:commandLink value="{!pw.pickvals}" id="selVal" onclick="return closedialog('{!pw.pickvals}')" ></apex:commandlink><br/>
+                        </apex:repeat>
+                    
+                </ol>
+            </apex:pageBlock>
+        </apex:form>
+       
+        
+    
+
+
+    </div>
+    
+    <apex:form id="form2" >
+        <apex:pageBlock id="pgBlock2">
+            <apex:pageBlockSection title="Specify Filter Criteria for Accounts" collapsible="false" columns="1" id="pgBlockSection">
+                <apex:panelGrid columns="3" id="theGrid">
+                    <apex:outputText ><b>Field</b></apex:outputText>
+                    <apex:outputText ><b>Operator</b></apex:outputText>
+                    <apex:outputText ><b>Value</b></apex:outputText>
+                    
+                    <apex:selectList value="{!selectedValueField}" multiselect="false" size="1" >
+                        <apex:selectOptions value="{!Fields}"/>
+                        <apex:actionSupport event="onchange" action="{!onfieldChange}" reRender="innerPanelGrid,form1"/>
+                    </apex:selectList>
+                    <apex:selectList value="{!selectedValueOperator}" multiselect="false" size="1">
+                        <apex:selectOptions value="{!Operators}"/>
+                    </apex:selectList>
+                    <apex:panelGrid columns="2" id="innerPanelGrid">
+                        <apex:inputText value="{!selectedValue}" id="selectedValue"/>
+                        <apex:commandLink rendered="{!isPicklist}" onclick="return opendialog()">
+                            <apex:image value="{!$Resource.lookupImage}" />
+                        </apex:commandLink>
+                        
+                    </apex:panelGrid>
+                </apex:panelGrid>
+                <apex:commandButton value="Go!" action="{!Go}"/>
+           </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form> 
+    
+</apex:page>

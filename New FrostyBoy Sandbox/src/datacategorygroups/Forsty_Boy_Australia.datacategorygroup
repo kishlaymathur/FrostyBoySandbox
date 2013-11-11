@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataCategoryGroup xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <dataCategory>
+        <dataCategory>
+            <dataCategory>
+                <label>Soft Serve</label>
+                <name>Soft_Serve</name>
+            </dataCategory>
+            <dataCategory>
+                <label>Frozen Yoghurt</label>
+                <name>Frozen_Yoghurt</name>
+            </dataCategory>
+            <dataCategory>
+                <label>Beverage</label>
+                <name>Beverage</name>
+            </dataCategory>
+            <dataCategory>
+                <label>Toppings</label>
+                <name>Toppings</name>
+            </dataCategory>
+            <dataCategory>
+                <label>Accessories</label>
+                <name>Accessories</name>
+            </dataCategory>
+            <dataCategory>
+                <label>Syrups</label>
+                <name>Syrups</name>
+            </dataCategory>
+            <dataCategory>
+                <label>Frosty Ice</label>
+                <name>Frosty_Ice</name>
+            </dataCategory>
+            <dataCategory>
+                <label>Cups</label>
+                <name>Cups</name>
+            </dataCategory>
+            <label>Products</label>
+            <name>Products</name>
+        </dataCategory>
+        <dataCategory>
+            <label>Machines</label>
+            <name>Machines</name>
+        </dataCategory>
+        <label>All</label>
+        <name>All</name>
+    </dataCategory>
+    <label>Frosty Boy Australia</label>
+    <objectUsage/>
+</DataCategoryGroup>

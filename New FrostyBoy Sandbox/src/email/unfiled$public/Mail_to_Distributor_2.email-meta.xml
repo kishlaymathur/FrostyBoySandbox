@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Mail to be Sent when Machine is Dispatched to Client</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Frosty_BoyCorporate</letterhead>
+    <name>Mail to Distributor 2</name>
+    <style>freeForm</style>
+    <subject>Machine is Dispatched</subject>
+    <textOnly>Hi {!User.Name},
+
+The Internal Date and the Machine Information for Contract {!Contract.ContractNumber} has been set.
+
+Machine Serial Number : {!Contract.Machine_Serial_Number__c}
+Machine Model : {!Contract.Machine_Model_Type__c}
+Machine Decal : {!Contract.Machine_Decals__c}
+Internal Delivery Date :
+For more details and further actions, click on the following link
+{!Contract.Link}
+
+Thanks
+Frosty Boy Admin</textOnly>
+    <type>html</type>
+</EmailTemplate>

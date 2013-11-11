@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Machine Location</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Machine Locations</value>
+    </caseValues>
+    <fields>
+        <label><!-- Active --></label>
+        <name>Active__c</name>
+    </fields>
+    <fields>
+        <label><!-- Actual Rent from Payments --></label>
+        <name>Actual_Rent_from_Payments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Billing Start Date --></label>
+        <name>Billing_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contract End Date --></label>
+        <name>Contract_End_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contract Start Date --></label>
+        <name>Contract_Start_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contract --></label>
+        <name>Contract__c</name>
+        <relationshipLabel><!-- Machine Locations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Cool Off End Date --></label>
+        <name>Cool_Off_End_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Cool Off Start Date --></label>
+        <name>Cool_Off_Start_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Cost Till date --></label>
+        <name>Cost_Till_date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Customer --></label>
+        <name>Customer__c</name>
+        <relationshipLabel><!-- Machine Locations (Customer) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- DistributorId --></label>
+        <name>DistributorId__c</name>
+    </fields>
+    <fields>
+        <label><!-- Distributor --></label>
+        <name>Distributor__c</name>
+        <relationshipLabel><!-- Machine Locations (Distributor) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- End Date --></label>
+        <name>End_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Expected Rent From Payments --></label>
+        <name>Expected_Rent_From_Payments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Distributor --></label>
+        <name>Formula_Distributor__c</name>
+    </fields>
+    <fields>
+        <label><!-- Installation Date --></label>
+        <name>Installation_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Machine Location --></label>
+        <name>Machine_Location1__c</name>
+    </fields>
+    <fields>
+        <label><!-- Machine Location Address --></label>
+        <name>Machine_Location_Address__c</name>
+    </fields>
+    <fields>
+        <label><!-- Machine Number --></label>
+        <name>Machine_Number__c</name>
+        <relationshipLabel><!-- Machine Locations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Machine Status Indicator --></label>
+        <name>Machine_Status_Indicator__c</name>
+    </fields>
+    <fields>
+        <label><!-- MonthlyPayment --></label>
+        <name>MonthlyPaymentFormula__c</name>
+    </fields>
+    <fields>
+        <label><!-- Revenue Till Date --></label>
+        <name>Revenue_Till_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Monthly Installment Amount --></label>
+        <name>Sale_price__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Allocated</masterLabel>
+            <translation><!-- Allocated --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Allocated-Cool Off</masterLabel>
+            <translation><!-- Allocated-Cool Off --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contract Completed</masterLabel>
+            <translation><!-- Contract Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ready</masterLabel>
+            <translation><!-- Ready --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Repair</masterLabel>
+            <translation><!-- Repair --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Total Revenue Till Date --></label>
+        <name>Total_Revenue_Till_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>FOL</masterLabel>
+            <translation><!-- FOL --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rent</masterLabel>
+            <translation><!-- Rent --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sale</masterLabel>
+            <translation><!-- Sale --></translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Machine Inventory Layout</layout>
+        <sections>
+            <label><!-- Amount Details --></label>
+            <section>Amount Details</section>
+        </sections>
+        <sections>
+            <label><!-- Contract Details --></label>
+            <section>Contract Details</section>
+        </sections>
+        <sections>
+            <label><!-- Cool Off Details --></label>
+            <section>Cool Off Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Enter Cool Off Details --></errorMessage>
+        <name>CoolOffStartAndEndDatesMandotary</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Create_Service_Case --></label>
+        <name>Create_Service_Case</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Generate_Payments --></label>
+        <name>Generate_Payments</name>
+    </webLinks>
+</CustomObjectTranslation>
